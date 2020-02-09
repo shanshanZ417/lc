@@ -1,3 +1,36 @@
+// Union Find
+class Solution {
+    public boolean areSentencesSimilarTwo(String[] words1, String[] words2, List<List<String>> pairs) {
+        if (words1.length != words2.length) {
+            return false;
+        }
+        Map<String, String> parent = new HashMap<>();
+        for (List<String> pair : pairs) {
+            String p1 = find(pair.get(0), parent);
+            String p2 = find(pair.get(1), parent);
+            if (!p1.equals(p2)) {
+                parent.put(p1, p2);
+            }
+        }
+        for (int i = 0; i < words1.length; i++) {
+            if (words1[i].equals(words2[i])) {
+                continue;
+            }
+            if (find(words1[i], parent).equals(find(words2[i], parent))) {
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
+    private String find(String root, Map<String, String> parent) {
+        if (!parent.containsKey(root)) {
+            parent.put(root, root);
+        }
+        return root.equals(parent.get(root)) ? root : find(parent.get(root), parent);
+    }
+}
+
 // dfs
 class Solution {
     public boolean areSentencesSimilarTwo(String[] words1, String[] words2, List<List<String>> pairs) {
