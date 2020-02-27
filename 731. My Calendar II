@@ -1,0 +1,25 @@
+// brute-force
+class MyCalendarTwo {
+    List<int[]> calendars;
+    List<int[]> overlaps;
+    public MyCalendarTwo() {
+        calendars = new ArrayList<>();
+        overlaps = new ArrayList<>();
+    }
+    
+    public boolean book(int start, int end) {
+        for (int[] overlap : overlaps) {
+            if (Math.max(overlap[0], start) < Math.min(overlap[1], end)) {
+                return false;
+            }
+        }
+        for (int[] calendar : calendars) {
+            if (Math.max(calendar[0], start) < Math.min(calendar[1], end)) {
+                overlaps.add(new int[]{Math.max(calendar[0], start), Math.min(calendar[1], end)});
+            }
+        }
+        calendars.add(new int[]{start, end});
+        return true;
+    }
+}
+
