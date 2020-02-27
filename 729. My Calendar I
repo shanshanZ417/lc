@@ -1,4 +1,4 @@
-// case 1: loop through
+// brute force: loop through
 class MyCalendar {
     List<int[]> books;
     public MyCalendar() {
@@ -16,6 +16,6 @@ class MyCalendar {
     }
 }
 
-
+// TreeMap
  
  
