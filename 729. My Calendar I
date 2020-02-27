@@ -17,5 +17,23 @@ class MyCalendar {
 }
 
 // TreeMap
- 
+ public class MyCalendar {
+    TreeMap<Integer, Integer> books;
+    public MyCalendar() {
+        books = new TreeMap<>();
+    }
+    
+    public boolean book(int start, int end) {
+        Integer cielingStart = books.ceilingKey(start);
+        if (cielingStart != null && end > cielingStart) {
+            return false;
+        }
+        Integer flooringStart = books.floorKey(start);
+        if (flooringStart != null && start < books.get(flooringStart)) {
+            return false;
+        }
+        books.put(start, end);
+        return true;
+    }
+}
  
