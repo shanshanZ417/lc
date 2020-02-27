@@ -1,0 +1,49 @@
+// Union find
+class Solution {
+     Map<String, String> parent;
+    Map<String, Double> val;
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        parent = new HashMap<>();
+        val = new HashMap<>();
+        for (int i = 0; i < equations.size(); i++) {
+            String p1 = find(equations.get(i).get(0));
+            String p2 = find(equations.get(i).get(1));
+            if (!p1.equals(p2)) {
+                parent.put(p1, p2);
+                val.put(p1, val.get(equations.get(i).get(1)) * values[i] / val.get(equations.get(i).get(0))); 
+            }
+        }
+        double[] result = new double[queries.size()];
+        int index = 0;
+        for (List<String> query : queries) {
+            if (!parent.containsKey(query.get(0)) || !parent.containsKey(query.get(1))) {
+                result[index++] = -1.0;
+                continue;
+            }
+            String p1 = find(query.get(0));
+            String p2 = find(query.get(1));
+            if (!p1.equals(p2)) {
+                result[index++] = -1.0;
+            } else {
+                result[index++] = val.get(query.get(0)) / val.get(query.get(1));
+            }
+        }
+        return result;    
+    }
+    private String find(String var) {
+        if (!parent.containsKey(var)) {
+            parent.put(var, var);
+            val.put(var, 1.0);
+            return var;
+        }
+        if (parent.get(var).equals(var)) {
+            return var;
+        }
+        String p = parent.get(var);
+        String newParent = find(p);
+        parent.put(var, newParent);
+        val.put(var, val.get(var) * val.get(p));
+        return newParent;
+    }
+    
+}
