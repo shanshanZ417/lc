@@ -23,3 +23,29 @@ class MyCalendarTwo {
     }
 }
 
+// Math
+class MyCalendarTwo {
+    TreeMap<Integer, Integer> books;
+    public MyCalendarTwo() {
+        books = new TreeMap<>();
+    }
+    
+    public boolean book(int start, int end) {
+        books.put(start, books.getOrDefault(start, 0) + 1); 
+        books.put(end, books.getOrDefault(end, 0) - 1);
+        
+        int active = 0;
+        for (int val : books.values()) {
+            active += val;
+            if (active >= 3) {
+                books.put(start, books.get(start) - 1);
+                books.put(end, books.get(end) + 1);
+                return false;
+                
+            }
+        }
+        return true;
+        
+    }
+}
+
