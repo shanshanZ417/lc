@@ -31,3 +31,9 @@ class Solution {
         return node;
     }
 }
+
+//路径压缩 另一种写法
+while (node != parent[node]) {
+            parent[node] = parent[parent[node]];
+            node = parent[node];
+}
