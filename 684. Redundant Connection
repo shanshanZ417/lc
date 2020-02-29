@@ -1,0 +1,34 @@
+// uf
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+        int[] parents = new int[edges.length + 1];
+        Arrays.fill(parents, -1);
+        List<int[]> result = new ArrayList<>();
+        for (int[] e : edges) {
+            int p1 = find(e[0], parents);
+            int p2 = find(e[1], parents);
+            if (p1 == p2) {
+                result.add(e);
+            } else {
+                parents[p1] = p2;
+            }
+        }
+        return result.get(result.size() - 1);
+    }
+    private int find(int n, int[] parents) {
+        if (parents[n] == -1) {
+            parents[n] = n;
+            return n;
+        }
+        int x = n;
+        while (x != parents[x]) {
+            x = parents[x];
+        }
+        while (n != x) {
+            int p = parents[n];
+            parents[n] = x;
+            n = p;
+        }
+        return n;
+    }
+}
