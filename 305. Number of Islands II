@@ -1,0 +1,51 @@
+// Union Find
+class Solution {
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        if (m <= 0 || n <= 0) {
+            return new ArrayList<>();
+        }
+        List<Integer> result = new ArrayList<>();
+        int[] xDir = {1, -1, 0, 0};
+        int[] yDir = {0, 0, 1, -1};
+        int[] parents = new int[m * n];
+        Arrays.fill(parents, -1);
+        int count = 0;
+        for (int[] pos : positions) {
+            int parent = pos[0] * n + pos[1];
+            if (parents[parent] != -1) {
+                result.add(count);
+                continue;
+            }
+            parents[parent] = parent;
+            count++;
+            for (int i = 0; i < 4; i++) {
+                int x = pos[0] + xDir[i];
+                int y = pos[1] + yDir[i];
+                if (x < 0 || x >= m || y < 0 || y >= n || parents[x * n + y] == -1) {
+                    continue;
+                } 
+                int newParent = find(x * n + y, parents);
+                if (parent != newParent) {
+                    parents[parent] = newParent;
+                    parent = newParent;
+
+                    count--;
+                }
+            }
+            result.add(count);
+        }
+        return result;
+    }
+    private int find(int node, int[] parents) {
+        int x = node;
+        while (x != parents[x]) {
+            x = parents[x];
+        }
+        while (node != x) {
+            int parent = parents[node];
+            parents[node] = x;
+            node = parent;
+        }
+        return node;
+    }
+}
