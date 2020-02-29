@@ -1,0 +1,82 @@
+//uf
+class Solution {
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String, String> parents = new HashMap<>();
+        Map<String, String> emailToName = new HashMap<>();
+        for (List<String> acc : accounts) {
+            for (int i = 1; i < acc.size(); i++) {
+                parents.put(acc.get(i), acc.get(i));
+                emailToName.put(acc.get(i), acc.get(0));
+            }
+        }
+        for (List<String> acc : accounts) {
+            String p1 = find(acc.get(1), parents);
+            for (int i = 2; i < acc.size(); i++) {
+                String p2 = find(acc.get(i), parents);
+                if (!p1.equals(p2)) {
+                    parents.put(p2, p1);
+                }
+            } 
+        }
+        Map<String, Set<String>> mapper = new HashMap<>();
+        // 这边至关重要，commend掉的是我原来写错的，
+        // 在loop parent的时候，我们还需要再次使用find，才能把email的老大哥统一起来！！
+        // for (Map.Entry<String, String> entry : parents.entrySet()) {
+        //     Set<String> vals = mapper.get(entry.getValue());
+        //     if (vals == null) {
+        //         vals = new HashSet<>();
+        //         vals.add(entry.getKey());
+        //         mapper.put(entry.getValue(), vals);
+        //     } else {
+        //         vals.add(entry.getKey());
+        //     }            
+        // }
+        for (List<String> acc : accounts) {
+            String p = find(acc.get(1), parents);
+            if (!mapper.containsKey(p)) mapper.put(p, new HashSet<>());
+            for (int i = 1; i < acc.size(); i++)
+                mapper.get(p).add(acc.get(i));
+        }
+        List<List<String>> result = new ArrayList<List<String>>();
+        for (Map.Entry<String, Set<String>> entry : mapper.entrySet()) {
+            Set<String> names = entry.getValue();
+            names.add(entry.getKey());
+            List<String> name = new ArrayList<>(names);
+            Collections.sort(name);
+            name.add(0, emailToName.get(entry.getKey()));
+            result.add(name);
+        }
+        return result;
+        
+    }
+    private String find(String node, Map<String, String> parents) {
+        String x = node;
+        while (!x.equals(parents.get(x))) {
+            x = parents.get(x);
+        }
+        while (!node.equals(x)) {
+            String parent = parents.get(node);
+            parents.put(node, x);
+            node = parent;
+        }
+        return node;
+    }
+}
+
+/* 进步
+- 可以用TreeSet, Set + Sort
+- 可以在加childs的时候把大老哥也加进去
+for (List<String> acc : accounts) {
+    String p = find(acc.get(1), parents);
+    if (!mapper.containsKey(p)) mapper.put(p, new TreeSet<>());
+    for (int i = 1; i < acc.size(); i++)
+        mapper.get(p).add(acc.get(i));
+    }
+}
+List<List<String>> result = new ArrayList<List<String>>();
+for (String p: mapper.keySet()) {
+    List<String> name = new ArrayList<>(mapper.get(p));
+    name.add(0, emailToName.get(p));
+    result.add(name);
+}
+*/
