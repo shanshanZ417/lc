@@ -66,3 +66,50 @@ class Solution {
             return father[node];
         }
     }
+
+// bfs
+class Solution {
+    public int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return 0;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        int sum = 0;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if (grid[i][j] == '1') {
+                    bfs(i, j, grid, m, n);
+                    sum++;
+                }
+            }
+        }
+        return sum;
+    }
+    private void bfs(int i, int j, char[][] grid, int m, int n) {
+        Deque<Integer> queue = new LinkedList<>();
+        queue.offerLast(i * n + j);
+        grid[i][j] = '0';
+        int[] xDir = {1, -1, 0, 0};
+        int[] yDir = {0, 0, 1, -1};
+        while (!queue.isEmpty()) {
+            Integer cur = queue.pollLast();
+            int x = cur / n;
+            int y = cur % n;
+            for (int k = 0; k < 4; k++) {
+                int newX = x + xDir[k];
+                int newY = y + yDir[k];
+                if (isValid(newX, newY, m, n) && grid[newX][newY] == '1') {
+                    queue.offerLast(newX * n + newY);
+                    grid[newX][newY] = '0';
+                }
+            }
+        }
+    }
+    private boolean isValid(int x, int y, int m, int n) {
+        if (x < 0 || x >= m || y < 0 || y >= n) {
+            return false;
+        }
+        return true;
+    }
+}
