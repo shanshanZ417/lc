@@ -1,0 +1,65 @@
+// dfs + trie
+class Solution {
+    public List<String> findWords(char[][] board, String[] words) {
+        Trie trie = new Trie(words);
+        int m = board.length;
+        int n = board[0].length;
+        Set<String> res = new HashSet<>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                TrieNode root = trie.roots;
+                dfs(i, j , m, n, board, root, res);
+            }
+        }
+        return new ArrayList<>(res);
+    }
+    private void dfs(int i, int j, int m, int n, char[][] board, TrieNode node, Set<String> res) {
+        if (!isValid(i, j, m, n) || board[i][j] == '#' || node.child[board[i][j] - 'a'] == null) {
+            return;
+        }
+        char c = board[i][j];
+        node = node.child[c - 'a'];
+        if (node.word != null) {
+            res.add(node.word);
+            //  这里可以用 node.word = null 这样可以用arraylist instead of set
+        }
+        board[i][j] = '#';
+        dfs(i + 1, j, m, n, board, node, res);
+        dfs(i - 1, j, m, n, board, node, res);
+        dfs(i, j + 1, m, n, board, node, res);
+        dfs(i, j - 1, m, n, board, node, res);
+        board[i][j] = c;
+    }
+    private boolean isValid(int i, int j, int m, int n) {
+        if (i < 0 || i >= m || j < 0 || j >= n) {
+            return false;
+        }
+        return true;
+    }
+}
+class TrieNode{
+    TrieNode[] child;
+    String word;
+    public TrieNode(){
+        child = new TrieNode[26];
+    }
+}
+class Trie {
+    TrieNode roots;
+    public Trie(String[] words) {
+        roots = new TrieNode();
+        for (String w : words) {
+            insert(w);
+        }
+    }
+    private void insert(String w) {
+        TrieNode root = roots;
+        for (char c : w.toCharArray()) {
+            if (root.child[c - 'a'] == null) {
+                root.child[c - 'a'] = new TrieNode();
+            }
+            root = root.child[c - 'a'];
+        }
+        root.word = w;
+    }
+}
