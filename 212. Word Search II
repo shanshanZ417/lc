@@ -22,6 +22,7 @@ class Solution {
         if (node.word != null) {
             res.add(node.word);
             //  这里可以用 node.word = null 这样可以用arraylist instead of set
+            // 这里不能return，因为有一些words是build on其他words，例如 aaa 和 aaab 
         }
         board[i][j] = '#';
         dfs(i + 1, j, m, n, board, node, res);
