@@ -1,0 +1,130 @@
+// Trie
+class Solution {
+    Trie trie;
+    public List<List<String>> wordSquares(String[] words) {
+        Trie trie = new Trie(words);
+        List<List<String>> result = new ArrayList<>();
+        List<String> cur = new ArrayList<>(); 
+        for (String w : words) {
+            cur.add(w);
+            helper(words[0].length(), cur, trie, result);
+            cur.remove(cur.size() - 1);
+        }
+        return result;
+    }
+    private void helper(int size, List<String> cur, Trie trie, List<List<String>> result) {
+        if (cur.size() == size) {
+            result.add(new ArrayList<>(cur));
+            return;
+        }
+        StringBuilder prefix = new StringBuilder();
+        for (String s : cur) {
+            prefix.append(s.charAt(cur.size()));
+        }
+        List<String> candidates = trie.startsWith(prefix.toString());
+        if (candidates.isEmpty()) {
+            return;
+        }
+        for (String candidate : candidates) {
+            cur.add(candidate);
+            helper(size, cur, trie, result);
+            cur.remove(cur.size() - 1);
+        }
+    }
+}
+class TrieNode{
+    public boolean isword;
+    public TrieNode[] child;
+    public String word;
+    public TrieNode(){
+        child = new TrieNode[26];
+    }
+}
+class Trie {
+    TrieNode roots;
+    public Trie(String[] words) {
+        roots = new TrieNode(); 
+        for (String w : words) {
+            insert(w);
+        }
+    }
+    public void insert(String word) {
+        char[] a = word.toCharArray();
+        TrieNode root = roots;
+        for (char c : a) {
+            if (root.child[c - 'a'] == null) {
+                root.child[c - 'a'] = new TrieNode();
+            }
+            root = root.child[c - 'a'];
+        }
+        root.isword = true;
+        root.word = word;
+    }
+    public void findWords(List<String> result, TrieNode node) {
+        if (node == null) {
+            return;
+        }
+        if (node.isword) {
+            result.add(node.word);
+            return;
+        }
+        for (TrieNode kid : node.child) {
+            findWords(result, kid);
+        }
+    } 
+    public List<String> startsWith(String prefix) {
+        List<String> candidates = new ArrayList<>();
+        TrieNode root = roots;
+        for (char c : prefix.toCharArray()) {
+            if (root.child[c - 'a'] == null) {
+                return candidates;
+            }
+            root = root.child[c - 'a'];
+        }
+        findWords(candidates, root);
+        return candidates;
+    }
+}
+
+/* 可以把startwith最开始存起来，比每次找要省时间。
+class TrieNode{
+    public TrieNode[] child;
+    public List<String> startWithPrefix;
+    public TrieNode(){
+        child = new TrieNode[26];
+        startWithPrefix = new ArrayList<>();
+    }
+}
+class Trie {
+    TrieNode roots;
+    public Trie(String[] words) {
+        roots = new TrieNode(); 
+        for (String w : words) {
+            insert(w);
+        }
+    }
+    public void insert(String word) {
+        char[] a = word.toCharArray();
+        TrieNode root = roots;
+        for (char c : a) {
+            if (root.child[c - 'a'] == null) {
+                root.child[c - 'a'] = new TrieNode();
+            }
+            root.child[c - 'a'].startWithPrefix.add(word);
+            root = root.child[c - 'a'];
+        }
+    }
+    public List<String> startsWith(String prefix) {
+        List<String> candidates = new ArrayList<>();
+        TrieNode root = roots;
+        for (char c : prefix.toCharArray()) {
+            if (root.child[c - 'a'] == null) {
+                return candidates;
+            }
+            root = root.child[c - 'a'];
+        }
+        candidates.addAll(root.startWithPrefix);
+        return candidates;
+    }
+}
+*/
