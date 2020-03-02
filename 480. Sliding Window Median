@@ -1,0 +1,35 @@
+// heap 日你妈了
+class Solution {
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        double[] res = new double[nums.length - k + 1];
+        PriorityQueue<Integer> minheap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>(Collections.reverseOrder());
+        int index = 0;
+        for (int i = 0; i < nums.length; i++) {
+            addValue(minheap, maxheap, nums, i);
+            if (i >= k -1) {
+                res[index++] = findMedian(minheap, maxheap);
+                int prev = i - (k - 1);
+                if (maxheap.contains(nums[prev])) {
+                maxheap.remove(nums[prev]);
+                } else {
+                minheap.remove(nums[prev]);
+                }
+            }
+        }
+        return res;
+    }
+    private double findMedian(PriorityQueue<Integer> minheap, PriorityQueue<Integer> maxheap) {
+        if (maxheap.size() > minheap.size()) {
+            return (double)maxheap.peek();
+        } 
+        return ((double)maxheap.peek() + (double)minheap.peek()) / 2.0;
+    }
+    private void addValue(PriorityQueue<Integer> minheap, PriorityQueue<Integer> maxheap, int[] nums, int i) {
+        maxheap.offer(nums[i]);
+        minheap.offer(maxheap.poll());
+        if (minheap.size() > maxheap.size()) {
+            maxheap.offer(minheap.poll());
+        }
+    }
+}
