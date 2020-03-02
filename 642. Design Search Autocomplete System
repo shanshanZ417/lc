@@ -1,0 +1,223 @@
+// trie 优化过后，把times存在trie中，不存startwith，每次重新找，因为如果要存startwith需要把time也存了。
+public class AutocompleteSystem {
+    Trie trie;
+    StringBuilder sb;
+    TrieNode root;
+    Boolean flag;
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        trie = new Trie(sentences, times);
+        sb = new StringBuilder();
+        root = trie.roots;
+        flag = false;
+    }
+    
+    public List<String> input(char c) {
+        List<String> res = new ArrayList<>();
+        if (c == '#') {
+            trie.insert(sb.toString(), 1);
+            root = trie.roots;
+            sb = new StringBuilder();
+        } else {
+            sb.append(c);
+            List<Node> candidates = trie.findStartWith(sb.toString());
+            Collections.sort(candidates, (a, b) -> a.t ==b.t ? a.s.compareTo(b.s) : b.t - a.t);
+            for (int i = 0; i < Math.min(candidates.size(), 3); i++) {
+                res.add(candidates.get(i).s);
+            }
+        }
+        return res;
+    }    
+    private List<String> findTop(List<String> candidate, Map<String, Integer> map) {
+        List<String> top = map.entrySet().stream()
+            .filter(a -> candidate.contains(a.getKey()))
+            .sorted((a, b) -> { 
+                if (a.getValue() != b.getValue()) { 
+                    return b.getValue().compareTo(a.getValue());
+                } else {
+                    return a.getKey().compareTo(b.getKey());
+                }})
+            .limit(3)
+            .map(a -> a.getKey())
+            .collect(Collectors.toList());
+        return top;
+    }
+    private Map<String, Integer> buildMap(String[] sentences, int[] times) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < times.length; i++) {
+            map.put(sentences[i], times[i]);
+        }
+        return map;
+    }
+}
+class Node {
+    String s;
+    int t;
+    public Node(String s, int t) {
+        this.s = s;
+        this.t = t;
+    }
+}
+class TrieNode {
+    TrieNode[] child;
+    int times;
+    public TrieNode(){
+        child = new TrieNode[27];
+        times = 0;
+    }
+}
+class Trie {
+    TrieNode roots;
+    public Trie(String[] sentences, int[] times) {
+        roots = new TrieNode();
+        for (int i = 0; i < sentences.length; i++) {
+            insert(sentences[i], times[i]);
+        }
+    }
+    public void insert(String s, int times) {
+        TrieNode root = roots;
+        for (char c : s.toCharArray()) {
+            int index = c - 'a';
+            if (c == ' ') {
+                index = 26;
+            }
+            if (root.child[index] == null) {
+                root.child[index] = new TrieNode();
+            }
+            root = root.child[index];
+        }
+        root.times += times;
+    }
+    public List<Node> findStartWith(String prefix) {
+        TrieNode node = roots;
+        List<Node> res = new ArrayList<Node>();
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            int index = c - 'a';
+            if (c == ' ') {
+                index = 26;
+            }
+            if (node.child[index] == null) {
+                return res;
+            }
+            node = node.child[index];
+        }
+        traverse(prefix, node, res);
+        return res;
+    }
+    private void traverse(String prefix, TrieNode node, List<Node> res) {
+        if (node.times > 0) {
+            res.add(new Node(prefix, node.times));
+        }
+        for (char i = 'a'; i <= 'z'; i++) {
+            if (node.child[i - 'a'] != null) {
+                traverse(prefix + i, node.child[i - 'a'], res);
+            }
+        }
+        if (node.child[26] != null) {
+          traverse(prefix + ' ', node.child[26], res);
+        }
+    }
+}
+
+
+
+// trie 没优化之前
+public class AutocompleteSystem {
+    Map<String, Integer> map;
+    Trie trie;
+    StringBuilder sb;
+    TrieNode root;
+    Boolean flag;
+    public AutocompleteSystem(String[] sentences, int[] times) {
+        map = buildMap(sentences, times);
+        trie = new Trie(sentences);
+        sb = new StringBuilder();
+        root = trie.roots;
+        flag = false;
+    }
+    
+    public List<String> input(char c) {
+        if (c == '#') {
+            String sen = sb.toString();
+            map.put(sen, map.getOrDefault(sen, 0) + 1);
+            trie.insert(sen);
+            root = trie.roots;
+            sb = new StringBuilder();
+            flag = false;
+            return new ArrayList<String>();
+        }
+        sb.append(c);
+        int index = c - 'a';
+        if (c == ' ') {
+            index = 26;
+        }
+        if (flag || root.child[index] == null) {
+                    System.out.println("here4");
+             flag = true;
+            return new ArrayList<String>();
+        }
+        root = root.child[index];
+        List<String> candidates = root.startWith;
+        return findTop(candidates, map);
+    }
+    private List<String> findTop(List<String> candidate, Map<String, Integer> map) {
+        List<String> top = map.entrySet().stream()
+            .filter(a -> candidate.contains(a.getKey()))
+            .sorted((a, b) -> { 
+                if (a.getValue() != b.getValue()) { 
+                    return b.getValue().compareTo(a.getValue());
+                } else {
+                    return a.getKey().compareTo(b.getKey());
+                }})
+            .limit(3)
+            .map(a -> a.getKey())
+            .collect(Collectors.toList());
+        return top;
+    }
+    private Map<String, Integer> buildMap(String[] sentences, int[] times) {
+        Map<String, Integer> map = new HashMap<>();
+        for (int i = 0; i < times.length; i++) {
+            map.put(sentences[i], times[i]);
+        }
+        return map;
+    }
+}
+class TrieNode {
+    TrieNode[] child;
+    List<String> startWith;
+    public TrieNode(){
+        child = new TrieNode[27];
+        startWith = new ArrayList<>();
+    }
+}
+class Trie {
+    TrieNode roots;
+    public Trie(String[] sentences) {
+        roots = new TrieNode();
+        for (String s : sentences) {
+            insert(s);
+        }
+    }
+    public void insert(String s) {
+        TrieNode root = roots;
+        for (char c : s.toCharArray()) {
+            int index = c - 'a';
+            if (c == ' ') {
+                index = 26;
+            }
+            if (root.child[index] == null) {
+                root.child[index] = new TrieNode();
+            }
+            root.child[index].startWith.add(s);
+            root = root.child[index];
+        }
+    }
+}
+
+
+
+/**
+ * Your AutocompleteSystem object will be instantiated and called as such:
+ * AutocompleteSystem obj = new AutocompleteSystem(sentences, times);
+ * List<String> param_1 = obj.input(c);
+ */
