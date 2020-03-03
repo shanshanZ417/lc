@@ -1,0 +1,30 @@
+// 九章用monotonous stack但我觉得数学要求太高了不intuitive，选择直接的recursive写法。
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return helper(nums, 0, nums.length - 1);
+    }
+    private TreeNode helper(int[] nums, int s, int e) {
+        if (s > e) {
+            return null;
+        }
+        if (s == e) {
+            return new TreeNode(nums[s]);
+        }
+        int large = findLargest(nums, s, e);
+        TreeNode root = new TreeNode(nums[large]);
+        root.left = helper(nums, s, large - 1);
+        root.right = helper(nums, large + 1, e);
+        return root;
+    }
+    private int findLargest(int[] nums, int s, int e){
+        int max = 0;
+        int index = 0;
+        for (int i = s; i <= e; i++) {
+            if (nums[i] > max) {
+                max = nums[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+}
