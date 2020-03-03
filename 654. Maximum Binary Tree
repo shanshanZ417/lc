@@ -7,9 +7,6 @@ class Solution {
         if (s > e) {
             return null;
         }
-        if (s == e) {
-            return new TreeNode(nums[s]);
-        }
         int large = findLargest(nums, s, e);
         TreeNode root = new TreeNode(nums[large]);
         root.left = helper(nums, s, large - 1);
@@ -20,7 +17,7 @@ class Solution {
         int max = 0;
         int index = 0;
         for (int i = s; i <= e; i++) {
-            if (nums[i] > max) {
+            if (nums[i] >= max) {
                 max = nums[i];
                 index = i;
             }
