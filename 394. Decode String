@@ -1,0 +1,33 @@
+class Solution {
+    public String decodeString(String s) {
+        Deque<Integer> numStack = new LinkedList<>();
+        Deque<String> stringStack = new LinkedList<>();
+        int index = 0;
+        StringBuilder sb = new StringBuilder();
+        int num = 0;
+        while (index < s.length()) {
+            char c = s.charAt(index);
+            if (Character.isDigit(c)) {
+                 num = num * 10 + c - '0';
+            } else if (c == '[') {
+                numStack.offerLast(num);
+                num = 0;
+                stringStack.offerLast(sb.toString());
+                sb = new StringBuilder();
+            } else if (c == ']') {
+                int times = numStack.pollLast();
+                String cur = sb.toString();
+                sb = new StringBuilder(stringStack.pollLast());
+                while (times > 0) {
+                    sb.append(cur);
+                    times--;
+                }
+            } else {
+                sb.append(c);
+            }
+            index++;
+        }
+        return sb.toString();
+        
+    }
+}
