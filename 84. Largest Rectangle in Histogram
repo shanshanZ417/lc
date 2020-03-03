@@ -1,0 +1,30 @@
+// monotonous stack 这题不是人
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        if (heights == null || heights.length == 0) {
+            return 0;
+        }
+        int size = heights.length;
+        int[] a = new int[size + 1];
+        // 最后一个是为了保证如果stack中还有东西，你还是要pop出来算max。
+        a = Arrays.copyOf(heights, size + 1);
+        int max = 0;
+        Deque<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < a.length; i++) {
+            if (!stack.isEmpty() && a[i] < a[stack.peekLast()]) {
+                while (!stack.isEmpty() && a[i] < a[stack.peekLast()]) {
+                    int cur = stack.pollLast();
+                    // -1是为了pop出来stack最后一个，它一定是最小的一个值，算它的面积需要从i到index=0的初始位置。
+                    int prev = stack.isEmpty() ? - 1 : stack.peekLast();
+                    int area = a[cur] * (i - prev - 1);
+                    // 之所以用i是因为往左边延伸到i，中间一定都是h大于peek，所以不能直接用peek的index。
+                    // 之所以用prev是因为往右边延伸到i，中间一定也都是h大于peek，而且都被pop出去了，所以不能直接用peek的index
+                    // prev...peek...i中间的点点包含了能延伸的所有方块，而且h都大于peek，已经被pop出去了在过程中。
+                    max = Math.max(max, area);
+                }
+            } 
+            stack.offerLast(i);
+        }
+        return max;
+    }
+}
