@@ -1,0 +1,50 @@
+// sweep line
+class Event {
+    int x;
+    int y;
+    boolean in;
+    public Event(int x, int y, boolean in){
+        this.x = x;
+        this.y = y;
+        this.in = in;
+    }
+}
+class Solution {
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        List<List<Integer>> result = new ArrayList<>();
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>(Collections.reverseOrder());
+        List<Event> events = new ArrayList<>();
+        for (int i = 0; i < buildings.length; i++) {
+            Event inevent = new Event(buildings[i][0], buildings[i][2], true);
+            Event outevent = new Event(buildings[i][1], buildings[i][2], false);
+            events.add(inevent);
+            events.add(outevent);
+        }
+        // events.sort((Event e1, Event e2) -> (e1.x).compareTo(e2.x));
+        Collections.sort(events, new Comparator<Event>(){
+            public int compare(Event e1, Event e2) {
+                return e1.x - e2.x;
+            }
+        });
+        int index = 0;
+        while (index < events.size()) {
+            int prevHeight = maxheap.isEmpty() ? 0 : maxheap.peek();
+            int x = events.get(index).x;
+            while (index < events.size() && events.get(index).x == x) {
+                Event event = events.get(index);
+                if (event.in) { 
+                    maxheap.offer(event.y);
+                } else {
+                    maxheap.remove(event.y);
+                }
+                index++;   
+            }
+            int curHeight = maxheap.isEmpty() ? 0 : maxheap.peek();
+            if (curHeight!= prevHeight) {
+                List<Integer> change = Arrays.asList(new Integer[]{x, curHeight});
+                result.add(change);
+            }
+        }
+        return result;
+    }
+}
