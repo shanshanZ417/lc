@@ -1,0 +1,58 @@
+class Node {
+    public int x;
+    public int y;
+    public int val;
+    public Node(int x, int y, int val) {
+        this.x = x;
+        this.y = y;
+        this.val = val;
+    }
+}
+class Solution {
+    public int trapRainWater(int[][] heightMap) {
+        if (heightMap == null || heightMap.length == 0 || heightMap[0].length == 0) {
+            return 0;
+        }
+        int m = heightMap.length;
+        int n = heightMap[0].length;
+        int sum = 0;
+        PriorityQueue<Node> minheap = new PriorityQueue<>(new Comparator<Node>(){
+            public int compare(Node n1, Node n2) {
+                return n1.val - n2.val;
+            }
+        });
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || i == m - 1 || j == 0 || j == n - 1) {
+                    minheap.offer(new Node(i, j, heightMap[i][j]));
+                    heightMap[i][j] = -1;
+                }
+            }
+        }
+        int[] xDir = {1, -1, 0, 0};
+        int[] yDir = {0, 0, 1, -1};
+        while (!minheap.isEmpty()) {
+            Node cur = minheap.poll();
+            for (int i = 0; i < 4; i++) {
+                int x = cur.x + xDir[i];
+                int y = cur.y + yDir[i];
+                if (!isValid(x, y, m, n) || heightMap[x][y] == -1) {
+                    continue;
+                }
+                if (heightMap[x][y] < cur.val) {
+                    sum += cur.val - heightMap[x][y];
+                }
+                int water = heightMap[x][y] <= cur.val ? cur.val : heightMap[x][y];
+                minheap.offer(new Node(x, y, water));
+                heightMap[x][y] = -1;
+            }
+        }
+        return sum;
+    }
+    private boolean isValid(int x, int y, int m, int n) {
+        if (x < 0 || x >= m || y < 0 || y >= n) {
+            return false;
+        }
+        return true;
+    }
+}
