@@ -1,0 +1,67 @@
+// binary search O(n) w/o sort w/o extra space
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int s = 1;
+        int e = nums.length - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            int sum = 0;
+            for (int i : nums) {
+                if (i <= index) {
+                    sum++;
+                }
+            }
+            if (sum <= index) {
+                s = index + 1;
+            } else {
+                e = index;
+            }
+        }
+        return s;
+    }
+}
+
+// binary search O(nlogn) w sort
+class Solution {
+    public int findDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        int s = 0;
+        int e = nums.length - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (nums[index] < index + 1) {
+                e = index - 1;
+            } else {
+                s = index + 1;
+            }
+        }
+        return nums[s];
+    }
+}
+
+// brute force w/o sort O(n) w extra spaces
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int[] flag = new int[nums.length - 1];
+        for (int i = 0; i < nums.length; i++) {
+            if (flag[nums[i] - 1] == 1) {
+                return nums[i];
+            }
+            flag[nums[i] - 1] = 1;
+        }
+        return -1;
+    }
+}
+
+// brute force w/ sort O(nlogn)
+class Solution {
+    public int findDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length - 1; i++) {
+            if (nums[i] == nums[i + 1]) {
+                return nums[i];
+            }
+        }
+        return -1;
+    }
+}
