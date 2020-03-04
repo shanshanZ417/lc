@@ -1,0 +1,26 @@
+// two pointers + substring 模版
+class Solution {
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        int[] count = new int[128];
+        int start = 0;
+        int end = 0;
+        int total = 0;
+        int max = 0;
+        while (end < s.length()) {
+            count[s.charAt(end) - 'A']++;
+            if (count[s.charAt(end++) - 'A'] == 1) {
+                total++;
+            }
+            while (start < end && total > 2) {
+                count[s.charAt(start) - 'A']--;
+                if (count[s.charAt(start++) - 'A'] == 0) {
+                    total--;
+                }
+            }
+            if (end - start > max) {
+                max = end - start;
+            }
+        }
+        return max;
+    }
+}
