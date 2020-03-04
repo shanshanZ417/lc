@@ -1,0 +1,49 @@
+// Deque linear
+// 使用双端队列，队列元素降序排序，队首元素为所求最大值。
+// 滑动窗口右移，若出现的元素比队首（最大元素）大，此时清空队列，并将最大值插入队列。若比当前值小，则插入尾部。
+//每次窗口右移的时候需要判断当前的最大值是否在有效范围，若不在，则需要将其从队列中删除。
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || nums.length == 0) {
+            return new int[]{};
+        }
+        Deque<Integer> deque = new LinkedList<>();
+        int[] res = new int[nums.length - k + 1];
+        int index = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (!deque.isEmpty() && deque.peekFirst() <= i - k) {
+                deque.pollFirst();
+            }
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+            if (i >= k - 1) {
+                res[index++] = nums[deque.peekFirst()];
+            }
+        }
+        return res;
+    }
+}
+// heap non-linear 
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if (nums == null || nums.length == 0 || k > nums.length) {
+            return new int[]{};
+        }
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>(Collections.reverseOrder());
+        int[] result = new int[nums.length - k + 1];
+        int index = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i < k) {
+                maxheap.offer(nums[i]);
+            } else {
+                result[index++] = maxheap.peek();
+                maxheap.remove(nums[i - k]);
+                maxheap.offer(nums[i]);
+            }
+        }
+        result[index] = maxheap.peek();
+        return result;
+    }
+}
