@@ -1,0 +1,24 @@
+// two pointers + substring 模版
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Map<Character, Integer> count = new HashMap<>();
+        int start = 0;
+        int end = 0;
+        int max = 0;
+        int total = 0;
+        while (end < s.length()) {
+            count.put(s.charAt(end), count.getOrDefault(s.charAt(end), 0) + 1);
+            if (count.get(s.charAt(end++)) > 1) {
+                total++;
+            }
+            while (start < end && total >= 1) {
+                count.put(s.charAt(start), count.get(s.charAt(start)) - 1);
+                if (count.get(s.charAt(start++)) == 1) {
+                    total--;
+                }
+            }
+            max = Math.max(end - start, max);
+        }
+        return max;
+    }
+}
