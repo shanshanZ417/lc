@@ -1,0 +1,45 @@
+// binary search on result
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        double s = Integer.MIN_VALUE;
+        double e = Integer.MAX_VALUE;
+        while (e - s > 0.00001) {
+        //主要就让足够小就可以了，我试了Math.pow(e, -10)可能有点太小了，就不work，具体为什么我也不知道
+            double mid = s + (e - s) / 2.0;
+            if (find(nums, mid, k)) {
+                s = mid;
+            } else {
+                e = mid;
+            }
+        }
+        return e;
+    }
+    private boolean find(int[] nums, double mid, int k) {
+        double[] a = new double[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            a[i] = nums[i] - mid;
+        }
+        double sum = 0;
+        double remove = 0;
+        // 如果把sum前k的过程放在整个 for (int i = 0; i < a.length; i++) 的循环中会不对，
+        // 因为如果len=1&k=1那就不会到i=1的地方检查并返回true
+        for (int i = 0; i < k; i++) {
+           sum += a[i];
+        }
+        if (sum >= 0) {
+            return true;
+        }
+        for (int i = k; i < a.length; i++) {
+            sum += a[i];
+            remove += a[i - k];
+            if (remove < 0) {
+                sum -= remove;
+                remove = 0;
+            }
+            if (sum >= 0) {
+                return true;
+            }  
+        }
+        return false;
+    }
+}
