@@ -1,0 +1,18 @@
+// binary search by result
+class Solution {
+    public int mySqrt(int x) {
+        int s = 0;
+        int e = x;
+        while (s + 1 < e) {
+            int index = s + (e - s) / 2;
+            if (Math.pow(index, 2) == x) {
+                return index;
+            } else if (Math.pow(index, 2) > x) {
+                e = index - 1;
+            } else {
+                s = index;
+            }
+        }
+        return Math.pow(e, 2) <= x ? e : s;
+    }
+}
