@@ -1,0 +1,33 @@
+// 模版
+public class Solution extends VersionControl {
+    public int firstBadVersion(int n) {
+        int s = 0;
+        int e = n;
+        while (s + 1 < e) {
+            int i = s + (e - s) / 2;
+            if (isBadVersion(i)) {
+                e = i;
+            } else {
+                s = i + 1;
+            }
+        }
+        return isBadVersion(s) ? s : e;
+    }
+}
+
+// 但这不是找last element所以可以不用 s + 1 < e
+public class Solution extends VersionControl {
+    public int firstBadVersion(int n) {
+        int s = 0;
+        int e = n;
+        while (s < e) {
+            int i = s + (e - s) / 2;
+            if (isBadVersion(i)) {
+                e = i;
+            } else {
+                s = i + 1;
+            }
+        }
+        return s;
+    }
+}
