@@ -1,0 +1,28 @@
+// binary search
+class Solution {
+    public int findMin(int[] nums) {
+        int s = 0;
+        int e = nums.length - 1;
+        while (s < e) {
+            int i = s + (e - s) / 2;
+            if (nums[i] <= nums[e]) {
+                e = i;
+            } else {
+                s = i + 1;
+            }
+        }
+        return nums[s];
+    }
+}
+
+/*
+two parts
+nums[mid] >= nums[s] && nums[mid] > nums[e]
+s = mid + 1;
+nums[mid] < nums[s] && nums[mid] <= nums[e]
+e = mid;
+
+one part
+nums[mid] >= nums[s] && nums[mid] <= nums[e]
+e = mid;
+*/
