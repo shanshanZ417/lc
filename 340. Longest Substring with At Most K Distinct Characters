@@ -1,0 +1,25 @@
+// two pointers + substring 模版 
+// 换成int[] count = new int[256]也可以
+class Solution {
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        Map<Character, Integer> map = new HashMap<>();
+        int start = 0;
+        int end = 0;
+        int total = 0;
+        int max = 0;
+        while (end < s.length()) {
+            map.put(s.charAt(end), map.getOrDefault(s.charAt(end), 0 ) + 1);
+            if (map.get(s.charAt(end++)) == 1) {
+                total++;
+            }
+            while (start < end && total > k) {
+                map.put(s.charAt(start), map.get(s.charAt(start)) - 1);
+                if (map.get(s.charAt(start++)) == 0) {
+                    total--;
+                } 
+            }
+            max = Math.max(max, end - start);
+        }
+        return max;
+    }
+}
