@@ -1,0 +1,36 @@
+// binary search 大神写法 我觉得好容易晕
+class Solution {
+    public int peakIndexInMountainArray(int[] A) {
+        int s = 0;
+        int e = A.length - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (A[index] < A[index + 1]) {
+                s = index + 1;
+            } else {
+                e = index;
+            }
+        }
+        return s;
+    }
+}
+
+//凡人写法
+class Solution {
+    public int peakIndexInMountainArray(int[] A) {
+        int s = 0;
+        int e = A.length - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (A[index - 1] > A[index]) {
+                e = index - 1;
+            } else if (A[index + 1] > A[index]){
+                s = index + 1;
+            } else {
+                return index;
+            }
+        }
+        return s;
+    }
+}
+
