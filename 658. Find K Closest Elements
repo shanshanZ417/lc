@@ -1,0 +1,77 @@
+// 这个二分太凶了
+/*
+Assume we are taking A[i] ~ A[i + k -1].
+We can binary research i
+We compare the distance between x - A[mid] and A[mid + k] - x
+
+If x - A[mid] > A[mid + k] - x,
+it means A[mid + 1] ~ A[mid + k] is better than A[mid] ~ A[mid + k - 1],
+and we have mid smaller than the right i.
+So assign left = mid + 1.
+*/
+
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int s = 0;
+        int e = arr.length - k;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (x - arr[index] > arr[index + k] - x) {
+                s = index + 1;
+            } else {
+                e = index;
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = s; i <= s + k - 1; i++) {
+            res.add(arr[i]);
+        }
+        return res;
+    }
+}
+// A[i] - A[i + k - 1]
+
+// 我写的二分是垃圾
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int index = smallerThan(arr, x);
+        System.out.println("index " + index);
+        List<Integer> res = new ArrayList<>();
+        int l = index;
+        int r = index + 1;
+        int left = 0;
+        int right = 0;
+        while (l >= 0 && r < arr.length) {
+            left = x - arr[l];
+            right = arr[r] - x;
+            if (left <= right) {
+                res.add(0, arr[l--]);
+            } else {
+                res.add(arr[r++]);
+            }
+            if (res.size() == k) {
+                return res;
+            }
+        }
+        while (l >= 0 && res.size() < k) {
+            res.add(0, arr[l--]);
+        }
+        while (r < arr.length && res.size() < k) {
+            res.add(arr[r++]);
+        }
+        return res;
+    }
+    private int smallerThan(int[] arr, int x) {
+        int s = 0;
+        int e = arr.length - 1;
+        while (s + 1 < e) {
+            int i = s + (e - s) / 2;
+            if (arr[i] <= x) {
+                s = i;
+            } else {
+                e = i - 1;
+            }
+        }
+        return arr[e] <= x ? e : s;
+    }
+}
