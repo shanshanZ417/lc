@@ -1,0 +1,41 @@
+// bfd shortest path
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        if (!wordList.contains(endWord)) {
+            return 0;
+        }
+        Set<String> words = new HashSet<>();
+        for (String s: wordList) {
+            words.add(s);
+        }
+        Deque<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        int sum = 1;
+        queue.offerLast(beginWord);
+        visited.add(beginWord);
+        while (!queue.isEmpty()) {
+            int s = queue.size();
+            sum++;
+            for (int j = 0; j < s; j ++) {
+                String cur = queue.pollFirst();
+                for (int i = 0; i < cur.length(); i++) {
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        if (c == cur.charAt(i)) {
+                            continue;
+                        }
+                        String change = cur.substring(0, i) + c + cur.substring(i + 1, cur.length());
+
+                        if (change.equals(endWord)) {
+                            return sum;
+                        }
+                        if (words.contains(change) && !visited.contains(change)) {
+                            queue.offerLast(change);
+                            visited.add(cur);
+                        }
+                    }
+                } 
+            }
+        }
+        return 0;
+    }
+}
