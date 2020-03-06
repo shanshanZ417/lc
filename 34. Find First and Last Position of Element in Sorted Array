@@ -1,0 +1,34 @@
+// 找last一定要s + 1 < e 否则肯定tle
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return new int[]{-1, -1};
+        }
+        int s = 0;
+        int e = nums.length - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (nums[index] >= target) {
+                e = index;
+            } else {
+                s = index + 1;
+            }
+        }
+        if (nums[s] != target) {
+            return new int[]{-1, -1};
+        }
+        int[] result = new int[]{s, -1};
+        s = 0;
+        e = nums.length - 1;
+        while (s + 1 < e) {
+            int index = s + (e - s) / 2;
+            if (nums[index] <= target) {
+                s = index;
+            } else {
+                e = index - 1;
+            }
+        }
+        result[1] = nums[e] == target ? e : s;
+        return result;
+    }
+}
