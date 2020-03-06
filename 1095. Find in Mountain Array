@@ -1,0 +1,36 @@
+// binary search
+ 
+class Solution {
+    public int findInMountainArray(int target, MountainArray mountainArr) {
+        int peak = findPeak(mountainArr);
+        int left = helper(0, peak, target, mountainArr, 1);
+        return left != -1 ? left : helper(peak + 1, mountainArr.length() - 1, target, mountainArr, -1);
+    }
+    private int helper(int s, int e, int target, MountainArray mountainArr, int slop) {
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            int find = mountainArr.get(index);
+            if (find == target) {
+                return index;
+            } else if ((slop * find) < target) {
+                s = index + 1;
+            } else {
+                e = index - 1;
+            }
+        }
+        return mountainArr.get(s) == target ? s : -1;
+    }
+    private int findPeak(MountainArray mountainArr) {
+        int s = 0;
+        int e = mountainArr.length() - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (mountainArr.get(index) < mountainArr.get(index + 1)) {
+                s = index + 1;
+            } else {
+                e = index;
+            }
+        }
+        return s;
+    }
+}
