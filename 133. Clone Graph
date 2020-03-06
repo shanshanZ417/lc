@@ -1,0 +1,32 @@
+// bfs in graph
+class Solution {
+    public Node cloneGraph(Node node) {
+        if (node == null) {
+            return node;
+        }
+        Map<Node, Node> mapper = new HashMap<>();
+        Deque<Node> queue = new LinkedList<>();
+        queue.offerLast(node);
+        while (!queue.isEmpty()) {
+            Node cur = queue.pollFirst();
+            if (mapper.containsKey(cur)) {
+                continue;
+            }
+            Node copy = new Node(cur.val);
+            mapper.put(cur, copy);
+            for (Node neighbor : cur.neighbors) {
+                queue.offerLast(neighbor);
+            }
+        }
+        for (Map.Entry<Node, Node> entry : mapper.entrySet()) {
+            for (Node neighbor : entry.getKey().neighbors) {
+                if (entry.getValue().neighbors == null) {
+                    entry.getValue().neighbors = new ArrayList<>();
+                }
+                entry.getValue().neighbors.add(mapper.get(neighbor));
+                
+            }
+        }
+        return mapper.get(node);
+    }
+}
