@@ -1,0 +1,31 @@
+// binary search
+class Solution {
+    public boolean search(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return false;
+        }
+        int s = 0;
+        int e = nums.length - 1;
+        while (s < e) {
+            int index = s + (e - s) / 2;
+            if (nums[index] == target) {
+                return true;
+            } else if (nums[index] < nums[e]) {
+                if (target > nums[index] && target <= nums[e]) {
+                    s = index + 1;
+                } else {
+                    e = index - 1;
+                }
+            } else if (nums[index] > nums[e]) {
+                if (target < nums[index] && target >= nums[s]) {
+                    e = index - 1;
+                } else {
+                    s = index + 1;
+                }
+            } else {
+                e--;
+            }
+        }
+        return nums[s] == target;
+    }
+}
