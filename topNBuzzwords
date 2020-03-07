@@ -1,0 +1,72 @@
+// https://leetcode.com/discuss/interview-question/460127/
+If the frequency is the same, then we need to sort based on the occurrences of each toy in different quotes.
+// "static void main" must be defined in a public class.
+
+// minheap(下面写的是minheap懒得改了)
+import java.util.*;
+public class topNBuzzwords {
+    public static void main(String[] args) {
+        topNBuzzwords test = new topNBuzzwords();
+        int numToys = 6;
+        int topToys = 2;
+        String[] toys = new String[]{"elmo", "elsa", "legos", "drone", "tablet", "warcraft"};
+        int numQuotes = 6;
+        String[] quotes = new String[]{
+        "Elsa is the hottest of the season! Elsa will be on every kid's wishlist!",
+        "The new Elsa dolls are super high quality",
+        "Expect the Elmo dolls to be very popular this year, Elmo!",
+        "Elmo and Elsa are the toys I'll be buying for my kids, Elmo is good",
+        "For parents of older kids, look into buying them a drone",
+        "Warcraft is slowly rising in popularity ahead of the holiday season"
+        };
+        List<String> res = test.topToy(numToys, topToys, toys, numQuotes, quotes);
+        for (String s : res) {
+            System.out.println(s);
+        }
+    }
+    public List<String> topToy(int numToys, int topToys, String[] toys, int numQuotes, String[] quotes) {
+        Map<String, int[]> mapper = new HashMap<>();
+        for (String toy : toys) {
+            mapper.put(toy, new int[]{0, 0});
+        }
+        for (String quote : quotes) {
+            Set<String> set = new HashSet<>();
+            String q = quote.replaceAll("[\\!?,;.']", "").toLowerCase();
+            String[] ts = q.split(" ");
+            for (String t : ts) {
+                if (mapper.containsKey(t)) {
+                    int[] times = mapper.get(t);
+                    times[0]++;
+                    if (!set.contains(t)) {
+                        times[1]++;
+                    }
+                    set.add(t);
+                }
+            }
+        }
+        PriorityQueue<Map.Entry<String, int[]>> maxheap = new PriorityQueue<>(new Comparator<Map.Entry<String, int[]>>(){
+            @Override
+            public int compare(Map.Entry<String, int[]> e1, Map.Entry<String, int[]> e2) {
+                if (e1.getValue()[0] != e2.getValue()[0]) {
+                    return e1.getValue()[0] - e2.getValue()[0];
+                } 
+                if (e1.getValue()[1] != e2.getValue()[1]) {
+                    return e1.getValue()[1] - e2.getValue()[1];
+                }
+                return e2.getKey().compareTo(e1.getKey());
+            }
+        });
+        for (Map.Entry<String, int[]> entry : mapper.entrySet()) {
+            maxheap.offer(entry);
+            if (maxheap.size() > topToys) {
+                maxheap.poll();
+            }
+            
+        }
+        List<String> res = new ArrayList<>();
+        while (!maxheap.isEmpty()) {
+            res.add(0, maxheap.poll().getKey());
+        }
+        return res;
+    }
+}
