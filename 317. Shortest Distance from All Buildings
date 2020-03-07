@@ -1,0 +1,59 @@
+// dfs
+class Solution {
+    public int shortestDistance(int[][] grid) {
+        if (grid == null || grid[0].length == 0) return 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] buildings = new int[m][n];
+        int[][] vals = new int[m][n];
+        int buildingNum = 0;
+        int[] xDir = new int[]{1, -1, 0, 0};
+        int[] yDir = new int[]{0, 0, 1, -1};
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    int sum = 0;
+                    buildingNum++;
+                    Deque<Integer> queue = new LinkedList<>();
+                    boolean[][] visited = new boolean[m][n];
+                    queue.offerLast(i * n + j);
+                    visited[i][j] = true;
+                    while (!queue.isEmpty()) {
+                        int s = queue.size();
+                        sum++;
+                        for (int k = 0 ;k < s; k++) {
+                            int cur = queue.pollFirst();
+                            int x = cur / n;
+                            int y = cur % n;
+                            for (int l = 0; l < 4; l++) {
+                                int newX = x + xDir[l];
+                                int newY = y + yDir[l];
+                                if (isValid(newX, newY, m, n) && grid[newX][newY] == 0 && !visited[newX][newY]) {
+                                    queue.offerLast(newX * n + newY);
+                                    visited[newX][newY] = true;
+                                    vals[newX][newY] += sum;
+                                    buildings[newX][newY]++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0 && buildings[i][j] == buildingNum) {
+                    res = Math.min(res, vals[i][j]);
+                } 
+            }
+        }
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+    private boolean isValid(int x, int y, int m, int n) {
+        if (x < 0 || x >=m || y < 0 || y >= n) {
+            return false;
+        }
+        return true;
+    }
+}
