@@ -1,0 +1,54 @@
+// bfs
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int sum = 0;
+        Deque<Integer> queue = new LinkedList<>();
+        int[] xDir = {1, -1, 0, 0};
+        int[] yDir = {0, 0, 1, -1};
+        int ifFresh = 0;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if (grid[i][j] == 2) {
+                    queue.offerLast(i * n + j);
+                }
+                if (grid[i][j] == 1) {
+                    ifFresh++;
+                }
+            }
+        }
+        if (ifFresh == 0) {
+            return 0;
+        }
+        while (!queue.isEmpty()) {
+            int s = queue.size();
+            int fresh = ifFresh;
+            for (int i = 0; i < s; i++) {
+               Integer cur = queue.pollFirst();
+                int x = cur / n;
+                int y = cur % n;
+                for (int k = 0; k < 4; k++) {
+                    int newX = x + xDir[k];
+                    int newY = y + yDir[k];
+                    if (isValid(newX, newY, m, n) && grid[newX][newY] == 1) {
+                        queue.offerLast(newX * n + newY);
+                        grid[newX][newY] = 2;
+                        ifFresh--;
+                    }
+                } 
+            }
+            if (fresh != ifFresh) {
+                sum++;
+            }
+        }
+        return ifFresh == 0 ? sum : -1;
+    }
+    private boolean isValid(int x, int y, int m, int n) {
+        if (x < 0 || x >= m || y < 0 || y >= n) {
+            return false;
+        }
+        return true;
+    }
+}
+
