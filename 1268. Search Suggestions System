@@ -1,0 +1,78 @@
+// trie
+class Solution {
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        Arrays.sort(products);
+        Trie trie = new Trie(products);
+        List<List<String>> res = new ArrayList<>();
+        for (int i = 1; i <= searchWord.length() ; i++) {
+            String prefix = searchWord.substring(0, i);
+            TrieNode cur = trie.root;
+            for (char c : prefix.toCharArray()) {
+                if (cur.child[c - 'a'] == null) {
+                    cur = null;
+                    break;
+                }
+                cur = cur.child[c - 'a'];
+            }
+            if (cur == null) {
+                res.add(new ArrayList<>());
+            } else {
+                res.add(cur.startWith);
+            }
+        }
+        return res;
+    }
+}
+class TrieNode {
+    TrieNode[] child;
+    List<String> startWith;
+    public TrieNode() {
+        child = new TrieNode[26];
+        startWith = new ArrayList<>();
+    }
+}
+class Trie {
+    TrieNode root;
+    public Trie(String[] str) {
+        root = new TrieNode();
+        for (String s : str) {
+            TrieNode cur = root;
+            for (char c : s.toCharArray()) {
+                if (cur.child[c - 'a'] == null) {
+                    cur.child[c - 'a'] = new TrieNode();
+                }
+                cur = cur.child[c - 'a'];
+                if (cur.startWith.size() < 3) {
+                    cur.startWith.add(s);
+                }
+            }
+        }
+    }
+}
+
+// binarySearch
+class Solution {
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        List<List<String>> res = new ArrayList<>();
+        Arrays.sort(products);
+        for (int i = 1; i <= searchWord.length(); i++) {
+            String prefix = searchWord.substring(0, i);
+            int index = Arrays.binarySearch(products, prefix);
+            List<String> cur = new ArrayList<>();
+            // in case there are more than 1 prefix in products.
+            while (index > 0 && prefix.equals(products[index - 1])) {
+                index--; // find the first one
+            }
+            if (index < 0) { //  no prefix in products. 
+                index = Math.abs(index + 1); // find the first one larger than prefix. [return -index - 1]
+            }
+            for (int j = index; j < products.length && cur.size() < 3; j++) {
+                if (products[j].startsWith(prefix)) {
+                    cur.add(products[j]);
+                }
+            }
+            res.add(cur);
+        }
+        return res;
+    }
+}
