@@ -1,0 +1,54 @@
+https://leetcode.com/discuss/interview-question/411357/
+// for loop + unionfind
+public class CriticalNode {
+    public static void main(String[] args) {
+        int numNodes = 7;
+        int numEdges = 7;
+        int[][]edges = new int[][]{{0, 1}, {0, 2}, {1, 3}, {2, 3}, {2, 5}, {5, 6}, {3, 4}};
+        CriticalNode test = new CriticalNode();
+        for (Integer i : test.getCriticalNode(numNodes, numEdges,edges)) {
+            System.out.println(i);
+        }
+        
+    }
+    public List<Integer> getCriticalNode(int numNodes, int numEdges, int[][] edges) {
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < numNodes; i++) {
+            if (helper(i, numNodes, edges) != 1) {
+                res.add(i);
+            }
+        }
+        return res;
+    }
+    private int helper(int node, int numNodes, int[][] edges) {
+        int connect = numNodes;
+        int[] parent = new int[numNodes];
+        for (int i = 0; i < numNodes; i++) {
+            parent[i] = i;
+        }
+        for (int[] e : edges) {
+            if (e[0] == node || e[1] == node) {
+                continue;
+            }
+            int p1 = find(e[0], parent);
+            int p2 = find(e[1], parent);
+            if (p1 != p2) {
+                parent[p1] = p2;
+                connect--;
+            }
+        }
+        return connect - 1;
+    }
+    private int find(int n, int[] parent) {
+        int x = n;
+        while (parent[x] != x) {
+            x = parent[x];
+        }
+        while (n != x) {
+            int p = parent[n];
+            parent[n] = x;
+            n = p;
+        }
+        return n;
+    }
+}
