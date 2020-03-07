@@ -1,0 +1,44 @@
+// dfs
+class Solution {
+    public void wallsAndGates(int[][] rooms) {
+        if (rooms == null || rooms.length == 0) {
+            return;
+        }
+        int m = rooms.length;
+        int n = rooms[0].length;
+        int sum = 0;
+        Deque<Integer> queue = new LinkedList<>();
+        int[] xDir = {1, -1, 0, 0};
+        int[] yDir = {0, 0, 1, -1};
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if (rooms[i][j] == 0) {
+                    queue.offerLast(i * n + j);
+                }
+            }
+        }
+        while (!queue.isEmpty()) {
+            int s = queue.size();
+            sum++;
+            for (int i = 0; i < s; i++) {
+                Integer cur = queue.pollFirst();
+                int x = cur / n;
+                int y = cur % n;
+                for (int j = 0; j < 4; j++) {
+                    int newX = x + xDir[j];
+                    int newY = y + yDir[j];
+                    if (isValid(newX, newY, m, n) && rooms[newX][newY] == Integer.MAX_VALUE) {
+                        queue.offerLast(newX * n + newY);
+                        rooms[newX][newY] = sum;
+                    }
+                }
+            }
+        }
+    }
+    private boolean isValid(int x, int y, int m, int n) {
+        if (x < 0 || x >= m || y < 0 || y >= n) {
+            return false;
+        }
+        return true;
+    }
+}
