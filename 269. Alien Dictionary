@@ -1,0 +1,49 @@
+// topological sort
+// ["za", "zb", "ca", "cb"] 这例子太骚了
+class Solution {
+    public String alienOrder(String[] words) {
+        int[] indegree = new int[26];
+        int[][] out = new int[26][26];
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < words.length; i++) {
+            for (char c : words[i].toCharArray()) {
+                set.add(c);
+            }
+        }
+        for (int i = 1; i < words.length; i++){
+            String prev = words[i - 1];
+            String cur = words[i];
+            for (int j = 0; j < Math.min(prev.length(), cur.length()); j++) {
+                if (prev.charAt(j) == cur.charAt(j)) {
+                    continue;
+                }
+                // 注意去重复；否则indegree加多了
+                if (out[prev.charAt(j) - 'a'][cur.charAt(j) - 'a'] != 1) {
+                    out[prev.charAt(j) - 'a'][cur.charAt(j) - 'a'] = 1;
+                    indegree[cur.charAt(j) - 'a']++;
+                }
+                break;
+            }
+        }
+        Deque<Character> queue = new LinkedList<>();
+        for (Character c : set) {
+            if (indegree[c - 'a'] == 0) {
+                queue.offerLast(c);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!queue.isEmpty()) {
+            Character cur = queue.pollFirst();
+            sb.append(cur);
+            for (int i = 0; i < 26; i++) {
+                if (out[cur - 'a'][i] == 1) {
+                    indegree[i]--;
+                    if (indegree[i] == 0) {
+                       queue.offerLast((char)('a' + i)); 
+                    }
+                }
+            }
+        }
+        return sb.length() == set.size() ? sb.toString() : "";
+    }
+}
