@@ -1,0 +1,49 @@
+// topological sort
+// 注意去重
+class Solution {
+    public boolean sequenceReconstruction(int[] org, List<List<Integer>> seqs) {
+        Map<Integer, Set<Integer>> out = new HashMap<>();
+        Map<Integer, Integer> indegree = new HashMap<>();
+        for (List<Integer> seq : seqs) {
+            for (int i = 0; i < seq.size(); i++) {
+                Integer cur = seq.get(i);
+                indegree.putIfAbsent(cur, 0);
+                out.putIfAbsent(cur, new HashSet<>());
+                if (i > 0) {
+                    Integer prev = seq.get(i - 1);
+                    if (!out.get(prev).contains(cur)) {
+                        indegree.put(cur, indegree.get(cur) + 1);
+                        out.get(prev).add(cur);
+                    }
+                }
+            }
+        }
+        if (indegree.size() != org.length) {
+            return false;
+        }
+        Deque<Integer> queue = new LinkedList<>();
+        for (Integer key : indegree.keySet()) {
+            if (indegree.get(key) == 0) {
+                queue.offerLast(key);
+            }
+        }
+        int index = 0;
+        while (!queue.isEmpty()) {
+            // 精华之处！如果size大于1，说明走哪个都可以，那就不可能拥有唯一路径啦。
+            if (queue.size() > 1) {
+                return false;
+            }
+            Integer cur = queue.pollFirst();
+            if (cur != org[index++]) {
+                return false;
+            }
+            for (Integer o : out.get(cur)) {
+                indegree.put(o, indegree.get(o) - 1);
+                if (indegree.get(o) == 0) {
+                    queue.offerLast(o);
+                }
+            }
+        }
+        return index == org.length;
+    }
+}
