@@ -1,0 +1,24 @@
+// binary tree(第一类：树上求值，求路径)
+class Solution {
+    public List<String> binaryTreePaths(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        List<String> res = new ArrayList<>();
+        helper(root, "", res);
+        return res;
+    }
+    private void helper(TreeNode node, String cur, List<String> res) {
+        if (node.left == null && node.right == null) {
+            cur = cur + node.val;
+            res.add(cur);
+            return;
+        }
+        if (node.left != null) {
+            helper(node.left, cur + node.val + "->", res);
+        }
+        if (node.right != null) {
+            helper(node.right, cur + node.val + "->", res);
+        }
+    }
+}
