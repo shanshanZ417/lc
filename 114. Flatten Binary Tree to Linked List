@@ -1,0 +1,39 @@
+// iterative
+class Solution {
+    public void flatten(TreeNode root) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root != null) {
+            if (root.right != null) {
+                stack.offerLast(root.right);
+            }
+            if (root.left != null) {
+                root.right = root.left;
+            } else {
+                root.right = stack.pollLast();
+            }
+            root.left = null;
+            root = root.right;
+        }
+    }
+}
+
+// recursion
+class Solution {
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        flatten(root.left);
+        flatten(root.right);
+        TreeNode right = root.right;
+        TreeNode left = root.left;
+        if (left != null) {
+            root.right = left;
+            root.left = null;
+            while (left.right != null) {
+                left = left.right;
+            }
+            left.right = right;
+        }
+    }
+}
