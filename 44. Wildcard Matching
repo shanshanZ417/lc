@@ -1,0 +1,38 @@
+// 单纯dfs会tle，需要dfs+memorilization。之后的会被先traverse到，就先加到memory中。用visited辅助。
+class Solution {
+    public boolean isMatch(String s, String p) {
+        int sLen = s.length() ;
+        int pLen = p.length(); 
+        boolean[][] visisted = new boolean[sLen][pLen];
+        boolean[][] memory = new boolean[sLen][pLen];
+        return helper(s, p, 0, 0, visisted, memory);
+    }
+    private boolean helper(String s, String p, int indexS, int indexP, boolean[][] visisted, boolean[][] memory) {
+        if (indexP == p.length()) {
+            return indexS == s.length();
+        }
+        if (indexS == s.length()) {
+            while (indexP < p.length()) {
+                if (p.charAt(indexP) != '*') {
+                    return false;
+                }
+                indexP++;
+            }
+            return true;
+        }
+        if (visisted[indexS][indexP]) {
+            return memory[indexS][indexP];
+        }
+        boolean match = false;
+        if (p.charAt(indexP) == '?') {
+            match = helper(s, p, indexS + 1, indexP + 1, visisted, memory);
+        } else if (p.charAt(indexP) != '*') {
+            match = (s.charAt(indexS) == p.charAt(indexP)) && helper(s, p, indexS + 1, indexP + 1, visisted, memory);
+        } else {
+            match = helper(s, p, indexS, indexP + 1, visisted, memory) || helper(s, p, indexS + 1, indexP, visisted, memory);
+        }
+        visisted[indexS][indexP] = true;
+        memory[indexS][indexP] = match;
+        return match;
+    }
+}
