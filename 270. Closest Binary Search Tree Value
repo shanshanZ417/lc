@@ -1,0 +1,56 @@
+// iterative
+class Solution {
+    public int closestValue(TreeNode root, double target) {
+        int val = root.val;
+        while (root != null) {
+            if (Math.abs(root.val - target) < Math.abs(val - target)) {
+                val = root.val;
+            }
+            root = root.val > target? root.left: root.right;
+        }
+        return val;
+    }
+}
+
+// recursive with global var
+class Solution {
+    long close = Long.MAX_VALUE;
+    public int closestValue(TreeNode root, double target) {
+        helper(root, target);
+        return close == Long.MAX_VALUE ? 0 : (int)close;
+    }
+    private void helper(TreeNode root, double target) {
+        if (root == null) {
+            return;
+        }
+        if (Math.abs(root.val - target) < Math.abs(close - target)) {
+            close = root.val;
+        }
+        if (root.val < target) {
+            helper(root.right, target);
+        } else {
+            helper(root.left, target);
+        }
+    }
+}
+
+// recursive without global var
+class Solution {
+    public int closestValue(TreeNode root, double target) {
+        return helper(root, target, root.val);
+    }
+    private int helper(TreeNode root, double target, int val) {
+        if (root == null) {
+            return val;
+        }
+        if (Math.abs(root.val - target) < Math.abs(val - target)) {
+            val = root.val;
+        }
+        if (root.val < target) {
+            val = helper(root.right, target, val);
+        } else {
+            val = helper(root.left, target, val);
+        }
+        return val;
+    }
+}
