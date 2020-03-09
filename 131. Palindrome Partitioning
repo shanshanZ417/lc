@@ -29,3 +29,44 @@ class Solution {
         
     }
 }
+
+
+// optimization: dp先计算出来palindrome的boolean数组
+class Solution {
+    public List<List<String>> partition(String s) {
+        boolean[][] isPalindrom = findPalindrom(s);
+        List<List<String>> res = new ArrayList<>();
+        List<String> cur = new ArrayList<>();
+        helper(s, 0, cur, res, isPalindrom);
+        return res;
+    }
+    private void helper(String s, int index, List<String> cur, List<List<String>> res, boolean[][] isPalindrom) {
+        if (index == s.length()) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (isPalindrom[index][i]) {
+                cur.add(s.substring(index, i + 1));
+                helper(s, i + 1, cur, res, isPalindrom);
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+    private boolean[][] findPalindrom(String s) {
+        int n = s.length();
+        boolean[][] isPalindrom = new boolean[n][n];
+        for (int i = 0; i < n; i++) {
+            isPalindrom[i][i] = true;
+        }
+        for (int i = 0; i < n - 1; i++) {
+            isPalindrom[i][i + 1] = (s.charAt(i) == s.charAt(i + 1));
+        }
+        for (int i = n - 3; i >= 0; i--) {
+            for (int j = i + 2; j < n; j++) {
+                isPalindrom[i][j] = isPalindrom[i + 1][j - 1] && (s.charAt(i) == s.charAt(j));
+            }
+        }
+        return isPalindrom;
+    }
+}
