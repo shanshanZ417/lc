@@ -1,0 +1,76 @@
+// DFS with memorilization 难
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        Map<String, List<String>> map = new HashMap<>();
+        return helper(s, wordDict, map);
+    }
+    private List<String> helper(String s, List<String> wordDict, Map<String, List<String>> map) {
+        if (map.containsKey(s)) {
+            return map.get(s);
+        }
+        List<String> cur = new ArrayList<>();
+        if (s.length() == 0) {
+            cur.add("");
+            return cur;
+        }
+        for (String word : wordDict) {
+            if (s.startsWith(word)) {
+                List<String> subList = helper(s.substring(word.length()), wordDict, map);
+                for (String sub : subList) {
+                    cur.add(word + (sub.isEmpty() ? "" : " ") + sub);
+                }
+            }
+        }
+        map.put(s, cur);
+        return cur;
+    }
+}
+
+// wiser direct DFS ->TLE
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        helper(s, sb, res, wordDict);
+        return res;
+    }
+    private void helper(String s, StringBuilder sb, List<String> res, List<String> wordDict) {
+        if (s.equals("")) {
+            res.add(new String(sb.substring(1, sb.length())));
+            return;
+        }
+        for (String word : wordDict) {
+            if (s.startsWith(word)) {
+                int size = sb.length();
+                sb.append(" ").append(word);
+                helper(s.substring(word.length()), sb, res, wordDict);
+                sb.setLength(size);
+            }
+        }
+    }
+}
+
+// direct DFS ->TLE
+class Solution {
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        helper(s, 0, sb, res, wordDict);
+        return res;
+    }
+    private void helper(String s, int index, StringBuilder sb, List<String> res, List<String> wordDict) {
+        if (index == s.length()) {
+            res.add(new String(sb.substring(1, sb.length())));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (wordDict.contains(s.substring(index, i + 1))) {
+                int size = sb.length();
+                sb.append(" ");
+                sb.append(s.substring(index, i + 1));
+                helper(s, i + 1, sb, res, wordDict);
+                sb.setLength(size);
+            }
+        }
+    }
+}
