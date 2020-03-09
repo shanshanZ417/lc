@@ -1,0 +1,31 @@
+// combination based DFS
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        List<String> cur = new ArrayList<>();
+        helper(s, 0, cur, res);
+        return res;
+    }
+    private void helper(String s, int index, List<String> cur, List<List<String>> res) {
+        if (index == s.length()) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (isPalindrome(s, index, i)) {
+                cur.add(s.substring(index, i + 1));
+                helper(s, i + 1, cur, res);
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+    private boolean isPalindrome(String str, int s, int e) {
+        while (s < e) {
+            if (str.charAt(s++) != str.charAt(e--)) {
+                return false;
+            }
+        }
+        return true;
+        
+    }
+}
