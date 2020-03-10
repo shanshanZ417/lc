@@ -1,0 +1,49 @@
+// BFS
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new ArrayList<>();
+        int[][] grid = new int[n][n];
+        helper(0, n, grid, res);
+        return res;
+    }
+    private void helper(int index, int n, int[][] grid, List<List<String>> res) {
+        if (index == n) {
+            res.add(converthelper(grid, n));
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            if (ifValid(index, i, n, grid)) {
+                grid[index][i] = 1;
+                helper(index + 1, n, grid, res);
+                grid[index][i] = 0;
+            }
+        }
+    }
+    private boolean ifValid(int x, int y, int n, int[][] grid) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    if (j == y || y - x == j - i || y + x == i + j) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    private List<String> converthelper(int[][] grid, int n) {
+        List<String> cur = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 0) {
+                    sb.append(".");
+                } else {
+                    sb.append("Q");
+                }
+            }
+            cur.add(new String(sb));
+        }
+        return cur;
+    }
+}
