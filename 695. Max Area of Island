@@ -1,0 +1,55 @@
+// dfs without global var
+class Solution {
+    public int maxAreaOfIsland(int[][] grid) {
+        int max = Integer.MIN_VALUE;
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    int sum = dfs(i, j, m, n, grid);
+                    max = Math.max(max, sum);
+                }
+            }
+        }
+        return max == Integer.MIN_VALUE ? 0 : max;
+    }
+    private int dfs(int i, int j, int m, int n, int[][] grid) {
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 0) {
+            return 0;
+        }
+        grid[i][j] = 0;
+        return 1 + dfs(i + 1, j, m, n, grid) + dfs(i - 1, j, m, n, grid) + dfs(i, j + 1, m, n, grid) + dfs(i, j - 1, m, n, grid);
+    }
+}
+
+// dfs with global var
+class Solution {
+    int sum = 0;
+    public int maxAreaOfIsland(int[][] grid) {
+        int max = Integer.MIN_VALUE;
+        int m = grid.length;
+        int n = grid[0].length;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    sum = 0;
+                    dfs(i, j, m, n, grid);
+                    max = Math.max(max, sum);
+                }
+            }
+        }
+        return max == Integer.MIN_VALUE ? 0 : max;
+    }
+    private void dfs(int i, int j, int m, int n, int[][] grid) {
+        if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] == 0) {
+            return;
+        }
+        grid[i][j] = 0;
+        sum++;
+        dfs(i + 1, j, m, n, grid);
+        dfs(i - 1, j, m, n, grid);
+        dfs(i, j + 1, m, n, grid);
+        dfs(i, j - 1, m, n, grid);
+    }
+}
