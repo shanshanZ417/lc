@@ -1,0 +1,33 @@
+// dfs
+class Solution {
+    public boolean wordPatternMatch(String pattern, String str) {
+        Map<Character, String> mapper = new HashMap<>();
+        return helper(str, pattern, 0, mapper);
+    }
+    private boolean helper(String str, String pattern,int indexP,  Map<Character, String> mapper) {
+        if (indexP == pattern.length() && str.length() == 0) {
+            return true;
+        } 
+        if (indexP == pattern.length() || str.length() == 0){
+            return false;
+        }
+        char p = pattern.charAt(indexP);
+        if (mapper.containsKey(p)) {
+            if (str.startsWith(mapper.get(p))) {
+                return helper(str.substring(mapper.get(p).length()), pattern, indexP + 1, mapper);
+            }
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (mapper.containsValue(str.substring(0, i + 1))) {
+                continue;
+            }
+            mapper.put(p, str.substring(0, i + 1));
+            if (helper(str.substring(i + 1), pattern, indexP + 1, mapper)) {
+                return true;
+            }
+            mapper.remove(p);
+        }
+        return false;
+    }
+}
