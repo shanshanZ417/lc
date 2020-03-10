@@ -1,0 +1,25 @@
+// dfs on graph
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        if (digits == null || digits.length() == 0) {
+            return new ArrayList<>();
+        }
+        String[] map = new String[]{"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        helper(digits, 0, sb, res, map);
+        return res;
+    }
+    private void helper(String digits, int index, StringBuilder sb, List<String> res, String[] map) {
+        if (index == digits.length()) {
+            res.add(sb.toString());
+            return;
+        }
+        for (char c : map[digits.charAt(index) - '0'].toCharArray()) {
+            int size = sb.length();
+            sb.append(c);
+            helper(digits, index + 1, sb, res, map);
+            sb.setLength(size);
+        }
+    }
+}
