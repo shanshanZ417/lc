@@ -1,0 +1,27 @@
+// dfs
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        List<Integer> cur = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        helper(nums, 0, cur, res, visited);
+        return res;
+    }
+    private void helper(int[] nums, int index, List<Integer> cur, List<List<Integer>> res, boolean[] visited) {
+        if (index == nums.length) {
+            res.add(new ArrayList<Integer>(cur));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] || i > 0 && nums[i] == nums[i - 1] && visited[i - 1]){
+                continue;
+            }
+            visited[i] = true;
+            cur.add(nums[i]);
+            helper(nums, index + 1, cur, res, visited);
+            cur.remove(cur.size() - 1);
+            visited[i] = false;
+        }
+    }
+}
