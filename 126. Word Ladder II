@@ -1,0 +1,78 @@
+// bfs + dfs 这题太骚了。真的太骚。如果直接forloop所有a-z会tle，optimize成pattern。
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        if (!wordList.contains(endWord)) {
+            return new ArrayList<>();
+        }
+        wordList.add(beginWord);
+        Map<String, List<String>> neighbors = new HashMap<>();
+        buildMap(neighbors, wordList);
+        Map<String, Integer> distance =  bfs(beginWord, endWord, neighbors);
+        List<List<String>> res = new ArrayList<>();
+        dfs(beginWord, endWord, neighbors, distance, new ArrayList<>(), res);
+        return res;
+    }
+    private Map<String, Integer> bfs(String beginWord, String endWord, Map<String, List<String>> neighbors) {
+        Deque<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        Map<String, Integer> distance = new HashMap<>();
+        queue.offerLast(beginWord);
+        visited.add(beginWord);
+        distance.put(beginWord, 0);
+        boolean flag = true;
+        int dis = 0;
+        while (!queue.isEmpty() && flag) {
+            int size = queue.size();
+            dis++;
+            for (int i = 0; i < size; i++) {
+                String cur = queue.pollFirst();
+                for (int j = 0 ; j < cur.length(); j++) {
+                    String pattern = cur.substring(0, j) + "*" + cur.substring(j + 1, cur.length());
+                    List<String> neighborList = neighbors.getOrDefault(pattern, new ArrayList<>());
+                    for (String neighbor : neighborList) {
+                        if (neighbor.equals(endWord)) {
+                            
+                            distance.put(neighbor, dis);
+                            flag = false;
+                        }
+                        if (!visited.contains(neighbor)) {
+                            queue.offerLast(neighbor);
+                            visited.add(neighbor);
+                            distance.put(neighbor, dis);
+                        }
+                    }
+                }
+            }
+        }
+        return distance;
+    }
+    private void dfs(String word, String endWord, Map<String, List<String>> neighbors, Map<String, Integer> distance, List<String> cur, List<List<String>> res) {
+        if (word.equals(endWord)) {
+            cur.add(endWord);
+            res.add(new ArrayList<>(cur));
+            cur.remove(endWord);
+            return;
+        }
+        cur.add(word);
+        for (int i = 0; i < word.length(); i++) {
+            String pattern = word.substring(0, i) + "*" + word.substring(i + 1, word.length());
+            List<String> neighborList = neighbors.getOrDefault(pattern, new ArrayList<>());
+            for (String neighbor : neighborList) {
+                if (distance.containsKey(neighbor) && distance.get(neighbor) == distance.get(word) + 1) {
+                    dfs(neighbor, endWord, neighbors, distance, cur, res);
+                }
+            }
+        }
+        cur.remove(word);
+    }
+    private void buildMap(Map<String, List<String>> neighbors, List<String> wordList) {
+        for (String word : wordList) {
+            for (int i = 0; i < word.length(); i++) {
+                String pattern = word.substring(0, i) + "*" + word.substring(i + 1, word.length());
+                List<String> list = neighbors.getOrDefault(pattern, new ArrayList<>());
+                list.add(word);
+                neighbors.put(pattern, list);
+            }
+        }
+    }
+}
