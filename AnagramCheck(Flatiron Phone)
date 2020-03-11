@@ -1,0 +1,100 @@
+// follow 1:
+// "static void main" must be defined in a public class.
+public class AnagramCheck {
+    public static void main(String[] args) {
+        AnagramCheck test = new AnagramCheck();
+        List<String> wordList = Arrays.asList("drink", "drinks", "john", "milk", "milks", "shanshan", "test", "jo", "jn");
+        String target = "john drinks milk";
+        for (String s : test.findAnagram(wordList, target)) {
+            System.out.println(s);
+        }
+    }
+    private List<String> findAnagram(List<String> wordList, String target) {
+        int[] mapper = new int[26];
+        for (char c : target.toCharArray()) {
+            if (c == ' ') {
+                continue;
+            }
+            mapper[c - 'a']++;
+        }
+        int[] expected = new int[26];
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        dfs(mapper, expected, 0, wordList, sb, res);
+        return res;
+    }
+    private void dfs(int[] mapper, int[] expected, int index, List<String> wordList, StringBuilder sb, List<String> res) {
+        if (index == wordList.size()) {
+             if (!Arrays.equals(mapper, expected)) {
+                 return;
+             }
+        }
+        if (Arrays.equals(mapper, expected)) {
+            res.add(sb.toString().trim());
+            return;
+        }
+        for (int i = index; i < wordList.size(); i++) {
+            if (isValid(mapper, wordList.get(i))) {
+                for (char c : wordList.get(i).toCharArray()) {
+                    mapper[c - 'a']--;
+                }
+                int size = sb.length();
+                sb.append(wordList.get(i));
+                sb.append(" ");
+                dfs(mapper, expected, i + 1, wordList, sb, res);
+                sb.setLength(size);
+                for (char c : wordList.get(i).toCharArray()) {
+                    mapper[c - 'a']++;
+                }
+            }
+        }
+    }
+    private boolean isValid(int[] mapper, String word) {
+        int[] copy = mapper.clone();
+        for (char c : word.toCharArray()) {
+            if (copy[c - 'a'] == 0) {
+                return false;
+            }
+            copy[c - 'a']--;
+        }
+        return true;
+    }
+}
+
+
+
+// anagram
+public class AnagramCheck {
+    public static void main(String[] args) {
+        AnagramCheck test = new AnagramCheck();
+        List<String> wordList = Arrays.asList("steak", "the", "hello", "word", "teaks", "tseak");
+        String target = "steak";
+        for (String s : test.findAnagram(wordList, target)) {
+            System.out.println(s);
+        }
+    }
+    private List<String> findAnagram(List<String> wordList, String target) {
+        int[] mapper = new int[26];
+        for (char c : target.toCharArray()) {
+            mapper[c - 'a']++;
+        }
+        List<String> res = new ArrayList<>();
+        for (String word : wordList) {
+            int[] copy = mapper.clone();
+            boolean isAnagram = true;
+            for (char c : word.toCharArray()) {
+                copy[c - 'a']--;
+            }
+            for (int i : copy) {
+                if (i != 0) {
+                    isAnagram = false;
+                    break;
+                }
+            }
+            if (isAnagram) {
+                res.add(word);
+            }
+        }
+        return res;
+    }
+}
