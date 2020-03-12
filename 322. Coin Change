@@ -44,3 +44,26 @@ class Solution {
         return memo[rest];
     }
 }
+
+// 最开始写的tle版本，我觉得不用sort也可以
+class Solution {
+    int min = Integer.MAX_VALUE;
+    public int coinChange(int[] coins, int amount) {
+        Arrays.sort(coins);
+        helper(coins, coins.length - 1, 0, amount);
+        return min == Integer.MAX_VALUE ? -1 : min; 
+    }
+    private void helper(int[] coins, int index, int count, int rest) {
+        if (rest <= 0 || index == -1) {
+            if (rest == 0) {
+                min = Math.min(min, count);
+            }
+            return;
+        }
+        for (int i = index; i >= 0; i--) {
+            for (int j = rest / coins[i]; j >= 1; j--) {
+                helper(coins, index - 1, count + j, rest - j * coins[i]);
+            }
+        }
+    }
+}
