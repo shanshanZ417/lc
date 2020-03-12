@@ -1,0 +1,36 @@
+// dp
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        int[] comb = new int[target + 1];
+        comb[0] = 1;
+        for (int i = 1; i < comb.length; i++) {
+            for (int j = 0; j < nums.length; j++) {
+                if (i - nums[j] >= 0) {
+                    comb[i] += comb[i - nums[j]];
+                }
+            }
+        }
+        return comb[target];
+    }
+}
+
+// TLE的dfs版本
+class Solution {
+    int count = 0;
+    public int combinationSum4(int[] nums, int target) {
+        helper(nums,target);
+        return count;
+    }
+    private void helper(int[] candidates, int target) {
+        if (target < 0) {
+            return;
+        }
+        if (target == 0) {
+            count++;
+            return;
+        }
+        for (int i = 0; i < candidates.length; i++) {
+            helper(candidates, target - candidates[i]);
+        }
+    }
+}
