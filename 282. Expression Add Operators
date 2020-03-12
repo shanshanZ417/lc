@@ -1,0 +1,32 @@
+// dfs
+class Solution {
+    public List<String> addOperators(String num, int target) {
+        List<String> res = new ArrayList<>();
+        helper(0, 0, 0, num, target, "", res);
+        return res;
+    }
+    private void helper(int index, long lastF, long sum, String num, int target, String path, List<String> res) {
+        if (index == num.length()) {
+            if (sum == target) {
+                res.add(path);
+            }
+            return;
+        }
+        for (int i = index; i < num.length(); i++) {
+            if (i != index && num.charAt(index) == '0') {
+                continue;
+            }
+            long curNum = Long.valueOf(num.substring(index, i + 1));
+            if (index == 0) {
+                helper(i + 1, curNum, curNum, num, target, path + curNum, res);
+            } else {
+                // with +
+                helper(i + 1, curNum, sum + curNum, num, target, path + "+" + curNum, res);
+                // with -;
+                helper(i + 1, -curNum, sum - curNum, num, target, path + "-" + curNum, res);
+                // with *;
+                helper(i + 1, lastF * curNum, sum - lastF + lastF * curNum, num, target, path + "*" + curNum, res);
+            }
+        }
+    }
+}
