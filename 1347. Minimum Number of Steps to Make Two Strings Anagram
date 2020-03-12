@@ -1,0 +1,16 @@
+class Solution {
+    public int minSteps(String s, String t) {
+        int[] mapper = new int[26];
+        for (char c : s.toCharArray()) {
+            mapper[c - 'a']++;
+        }
+        for (char c : t.toCharArray()) {
+            mapper[c - 'a']--;
+        }
+        int res = 0;
+        for (int i : mapper) {
+            res += Math.abs(i);
+        }
+        return res / 2;
+    }
+}
