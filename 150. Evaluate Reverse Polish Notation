@@ -1,0 +1,26 @@
+// follow up 如果有几百个不同的运算符怎么处理。
+
+// stack
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Deque<Integer> stack = new LinkedList<>();
+        for (String t : tokens) {
+            if (t.equals("+")) {
+                stack.offerLast(stack.pollLast() + stack.pollLast());
+            } else if (t.equals("-")) {
+                int sec = stack.pollLast();
+                int fir = stack.pollLast();
+                stack.offerLast(fir - sec);
+            } else if (t.equals("*")) {
+                stack.offerLast(stack.pollLast() * stack.pollLast());
+            } else if (t.equals("/")) {
+                int sec = stack.pollLast();
+                int fir = stack.pollLast();
+                stack.offerLast(fir / sec);
+            } else {
+                stack.offerLast(Integer.valueOf(t));
+            }
+        }
+        return stack.pollLast();
+    }
+}
