@@ -1,0 +1,12 @@
+// math
+class Solution {
+    public int maxProfit(int[] prices) {
+        int res = 0;
+        int curMax = 0;
+        for (int i = prices.length - 1; i >= 0; i--) {
+            curMax = Math.max(curMax, prices[i]);
+            res = Math.max(res, curMax - prices[i]);
+        }
+        return res;
+    }
+}
