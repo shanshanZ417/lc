@@ -1,0 +1,19 @@
+// 跟buy stock一类题
+public class MaximumProfit {
+    public static void main(String[] args) {
+        List<Integer> prices = Arrays.asList(new Integer[]{3,4,5,3,5,2});
+        MaximumProfit test = new MaximumProfit();
+        System.out.println(test.maximumProfit(prices));
+    }
+    public long maximumProfit(List<Integer> prices) {
+        int curMax = 0;
+        long result = 0L;
+        for (int i = prices.size() - 1; i >= 0; i--) {
+            curMax = Math.max(curMax, prices.get(i));
+            if (prices.get(i) < curMax) {
+                result += curMax - prices.get(i);
+            }
+        }
+        return result;
+    }
+}
