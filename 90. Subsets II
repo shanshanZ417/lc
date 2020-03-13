@@ -1,0 +1,25 @@
+// dfs
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        boolean[] visited = new boolean[nums.length];
+        helper(0, nums, new ArrayList<>(), res, visited);
+        return res;
+    }
+    private void helper(int start, int[] nums, List<Integer> cur, List<List<Integer>> res, boolean[] visited) {
+        if (start == nums.length) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        helper(start + 1, nums, cur, res, visited);
+        if (start > 0 && nums[start] == nums[start - 1] && !visited[start - 1]) {
+            return;
+        }
+        visited[start] = true;
+        cur.add(nums[start]);
+        helper(start + 1, nums, cur, res, visited);
+        cur.remove(cur.size() - 1);
+        visited[start] = false;
+    }
+}
