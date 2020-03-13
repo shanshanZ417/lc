@@ -1,4 +1,4 @@
-// Trie
+// dfs + Trie 剪枝
 class Solution {
     Trie trie;
     public List<List<String>> wordSquares(String[] words) {
