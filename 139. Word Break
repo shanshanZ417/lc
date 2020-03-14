@@ -1,0 +1,20 @@
+// dp
+// 也可以用memorization dfs写，但因为不需要过程记录，直接dp就可以了。
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int size = s.length();
+        // dp[i] is [0, i]
+        
+        boolean[] dp = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j <= i; j++) {
+                String sub = s.substring(j, i + 1);
+                if (wordDict.contains(sub) && (j == 0 || dp[j - 1])) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[size - 1];
+    }
+}
