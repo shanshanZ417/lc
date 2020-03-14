@@ -1,4 +1,4 @@
-// iterative
+// iterative 树上的二分查找
 class Solution {
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
         TreeNode prev = null;
