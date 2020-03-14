@@ -1,0 +1,142 @@
+// 作为一个天才，我第一次写的时候写成了dfs recursion和bfs queue的混合解法
+// Sol 1: dfs recursion 
+public class Codec {
+    private final String delimiter = " ";
+    private final String nullStatus = "n";
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        convertToString(root, sb);
+        return sb.toString().trim();
+    }
+    private void convertToString(TreeNode node, StringBuilder sb) {
+        if (node == null) {
+            sb.append(delimiter);
+            sb.append(nullStatus);
+            return;
+        }
+        sb.append(delimiter);
+        sb.append(node.val);
+        convertToString(node.left, sb);
+        convertToString(node.right, sb);
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        Deque<String> queue = new LinkedList<>();
+        queue.addAll(Arrays.asList(data.split(delimiter)));
+        return convertToTree(queue);
+    }
+    private TreeNode convertToTree(Deque<String> queue){
+        String cur = queue.pollFirst();
+        if (cur.equals(nullStatus)) {
+            return null;
+        }
+        TreeNode curNode = new TreeNode(Integer.valueOf(cur));
+        curNode.left = convertToTree(queue);
+        curNode.right = convertToTree(queue);
+        return curNode;
+    }
+}
+
+// Sol 2: dfs iterative with stack
+// pre-order
+public class Codec {
+    private final String delimiter = " ";
+    private final String nullStatus = "n";
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                sb.append(delimiter).append(root.val);
+                stack.offerLast(root);
+                root = root.left;
+            }
+            sb.append(delimiter).append(nullStatus);
+            root = stack.pollLast();
+            root = root.right;
+        }
+        return sb.toString().trim();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.equals("")) {
+            return null;
+        }
+        String[] nodes = data.split(" ");
+        TreeNode root = nodes[0].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(nodes[0]));
+        int index = 1;
+        TreeNode dummy = root;
+        Deque<TreeNode> stack = new LinkedList<>();
+        while ((root != null || !stack.isEmpty()) && index < nodes.length) {
+            while (root != null && index < nodes.length) {
+                stack.offerLast(root);
+                root.left = nodes[index].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(nodes[index]));
+                index++;
+                root = root.left;
+            }
+            if (index < nodes.length) {
+                root = stack.pollLast();
+                root.right = nodes[index].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(nodes[index]));
+                index++;
+                root = root.right;
+            }
+        }
+        return dummy;
+    }
+}
+
+// sol 3: leetcode存储法 bfs with queue
+public class Codec {
+    private final String delimiter = " ";
+    private final String nullStatus = "n";
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) return "";
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offerLast(root);
+        StringBuilder sb = new StringBuilder();
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.pollFirst();
+            if (cur == null) {
+                sb.append(delimiter).append(nullStatus);
+                continue;
+            }
+            sb.append(delimiter).append(cur.val);
+            queue.offerLast(cur.left);
+            queue.offerLast(cur.right);
+        }
+        return sb.toString().trim();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data.equals("")) {
+            return null;
+        }
+        String[] vals = data.split(delimiter);
+        Deque<TreeNode> queue = new LinkedList<>();
+        TreeNode root = new TreeNode(Integer.valueOf(vals[0]));
+        queue.offerLast(root);
+        int index = 1;
+        while (!queue.isEmpty() && index < vals.length) {
+            TreeNode cur = queue.pollFirst();
+            TreeNode leftNode = vals[index].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(vals[index]));
+            index++;
+            TreeNode rightNode = vals[index].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(vals[index]));
+            index++;
+            cur.left = leftNode;
+            cur.right = rightNode;
+            if (leftNode != null) {
+                queue.offerLast(leftNode);
+            }
+            if (rightNode != null) {
+                queue.offerLast(rightNode);
+            }
+        }
+        return root;
+    }
+}
