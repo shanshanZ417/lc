@@ -1,4 +1,4 @@
-// iterative
+// iterative dfs
 class Solution {
     public TreeNode convertBST(TreeNode root) {
         int sum = 0; 
@@ -18,7 +18,7 @@ class Solution {
     }
 }
 
-// recursion
+// recursion dfs
 class Solution {
     int sum = 0;
     public TreeNode convertBST(TreeNode root) {
