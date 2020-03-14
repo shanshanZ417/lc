@@ -1,0 +1,62 @@
+// recursion
+/*
+先找到最左边的。再开始翻转 ->先recursion再翻转，否则就找不到下一层；记得断开之前链接，不然会有loop。
+*/
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root == null || root.left == null && root.right == null) {
+            return root;
+        }
+        TreeNode leftNode = upsideDownBinaryTree(root.left);
+        root.left.left = root.right;
+        root.left.right = root;
+        root.left = null;
+        root.right = null;
+        return leftNode;
+    }
+}
+
+// iterative 这是直接翻转，结构改变了。当前node的right child要记录下来在一个TreeNode中，下一个node才能找到这个right node
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        TreeNode next = null;
+        TreeNode tmp = null;
+        TreeNode prev = null;
+        while (root != null) {
+            next = root.left;
+            root.left = tmp;
+            tmp = root.right;
+            root.right = prev;
+            prev = root;
+            root = next;
+        }
+        return prev;
+    }
+}
+
+// iterative 渣渣解法
+class Solution {
+    public TreeNode upsideDownBinaryTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root.left != null) {
+            stack.offerLast(root);
+            root = root.left;
+        }
+        TreeNode res = root;
+        while (!stack.isEmpty()) {
+            TreeNode parent = stack.pollLast();
+            root.right = parent;
+            root.left = parent.right;
+            parent.left = null;
+            parent.right = null;
+            root = parent;
+        }
+        return res;
+    }
+}
