@@ -1,0 +1,27 @@
+// recursion
+// 观察发现在第几层取决于你的高度是多少
+class Solution {
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        Map<Integer, List<Integer>> mapper = new HashMap<>();
+        List<List<Integer>> res = new ArrayList<>();
+        helper(root, mapper);
+        for (int i = 1; i <= mapper.size(); i++) {
+            res.add(mapper.get(i));
+        }
+        return res;
+    }
+    private int helper(TreeNode root, Map<Integer, List<Integer>> mapper) {
+        if (root == null) {
+            return 0;
+        }
+        int left = helper(root.left, mapper);
+        int right = helper(root.right, mapper);
+        int h = Math.max(left, right) + 1;
+        if (!mapper.containsKey(h)) {
+            mapper.put(h, new ArrayList<>());
+        }
+        mapper.get(h).add(root.val);
+        return h;
+    }
+    
+}
