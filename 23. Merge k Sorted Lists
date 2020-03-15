@@ -1,0 +1,112 @@
+// priorityqueue
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        PriorityQueue<ListNode> minheap = new PriorityQueue<>(new Comparator<ListNode>(){
+            public int compare(ListNode l1, ListNode l2) {
+                return l1.val - l2.val;
+            }
+        });
+        for (ListNode node : lists) {
+            if (node != null) {
+                minheap.offer(node);
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode res = dummy;
+        while (!minheap.isEmpty()) {
+            ListNode cur = minheap.poll();
+            dummy.next = cur;
+            dummy = dummy.next;
+            if (cur.next != null) {
+                minheap.offer(cur.next);
+            }
+        }
+        return res.next;
+    }
+}
+
+// 方法三：自底向上的两两归并算法 
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) {
+            return null;
+        }
+        List<ListNode> list = Arrays.asList(lists);
+        while (list.size() > 1) {
+            List<ListNode> newList = new ArrayList<>();
+            for (int i = 0; i < list.size() - 1; i += 2) {
+                ListNode mergedNode = mergeList(list.get(i), list.get(i + 1));
+                newList.add(mergedNode);
+            }
+            if (list.size() % 2 == 1) {
+                newList.add(list.get(list.size() - 1));
+            }
+            list = newList;
+        }
+        return list.get(0);
+    }
+    private ListNode mergeList(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode res = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                dummy.next = l1;
+                l1 = l1.next;
+            } else {
+                dummy.next = l2;
+                l2 = l2.next;
+            }
+            dummy = dummy.next;
+        }
+        if (l1 != null) {
+            dummy.next = l1;
+        }
+        if (l2 != null) {
+            dummy.next = l2;
+        }
+        return res.next;
+    }
+}
+
+// 方法二:类似归并排序的分治算法 Divide & Conquer
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0) {
+            return null;
+        }
+        return helper(lists, 0, lists.length- 1);
+    }
+    private ListNode helper(ListNode[] lists, int s, int e) {
+        if (s >= e) {
+            return lists[s];
+        }
+        int mid = s + (e - s) / 2;
+        ListNode left = helper(lists, s, mid);
+        ListNode right = helper(lists, mid + 1, e);
+        return merged(left, right);
+    }
+    private ListNode merged(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode res = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                dummy.next = l1;
+                l1 = l1.next;
+            } else {
+                dummy.next = l2;
+                l2 = l2.next;
+            }
+            dummy = dummy.next;
+        }
+        if (l1 != null) {
+            dummy.next = l1;
+        }
+        if (l2 != null) {
+            dummy.next = l2;
+        }
+        return res.next;
+    }
+}
