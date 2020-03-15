@@ -1,0 +1,21 @@
+// sliding window
+class MovingAverage {
+    double sum;
+    Deque<Integer> deque;
+    int size;
+    /** Initialize your data structure here. */
+    public MovingAverage(int size) {
+        sum = 0;
+        this.size = size;
+        deque = new LinkedList<>();
+    }
+    
+    public double next(int val) {
+        if (deque.size() == size) {
+            sum -= deque.pollFirst();
+        }
+        deque.offerLast(val);
+        sum += val;
+        return sum / deque.size();
+    }
+}
