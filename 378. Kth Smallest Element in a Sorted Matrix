@@ -1,0 +1,21 @@
+// 机智版pq
+class Solution {
+    public int kthSmallest(int[][] matrix, int k) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        PriorityQueue<Integer> minheap = new PriorityQueue<>((a, b) -> matrix[a / n][a % n] - matrix[b / n][b % n]);
+        // 不需要超过k个，如果每一行比k多
+        for (int i = 0; i < n && i < k; i++) {
+            minheap.offer(i);
+        }
+        int cur = 0;
+        for (int i = 0; i < k; i++) {
+            cur = minheap.poll();
+            if (cur / n == m - 1) {
+                continue;
+            }
+            minheap.offer((cur / n + 1) * n + cur % n);
+        }
+        return matrix[cur / n][cur % n];
+    }
+}
