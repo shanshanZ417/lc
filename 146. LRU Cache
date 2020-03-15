@@ -1,0 +1,73 @@
+// 开头结尾dummy node非常牛批
+class ListNode {
+    int key;
+    int val;
+    ListNode prev;
+    ListNode next;
+}
+class LRUCache {
+    int capacity;
+    ListNode head;
+    ListNode tail;
+    Map<Integer, ListNode> map;
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        map = new HashMap<>();
+        head = new ListNode();
+        tail = new ListNode();
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        if (!map.containsKey(key)) {
+            return -1;
+        }
+        ListNode node = map.get(key);
+        remove(node);
+        addHead(node);
+        return node.val;
+    }
+    
+    public void put(int key, int value) {
+        ListNode node = map.get(key);
+        if (node == null) {
+            ListNode newNode = new ListNode();
+            newNode.key = key;
+            newNode.val = value;
+            //这里put和addHead搞错顺序就是傻逼了
+            map.put(key, newNode);
+            addHead(newNode);
+        } else {
+            node.val = value;
+            remove(node);
+            addHead(node);
+        }
+    }
+    
+    private void remove(ListNode node){
+        ListNode prev = node.prev;
+        ListNode next = node.next;
+        prev.next = next;
+        next.prev = prev;
+    }
+    
+    private void addHead(ListNode node) {
+        node.prev = head;
+        node.next = head.next;
+        head.next.prev = node;
+        head.next = node;
+        if (map.size() > capacity) {
+            ListNode cur = tail.prev;
+            remove(cur);
+            map.remove(cur.key);
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
