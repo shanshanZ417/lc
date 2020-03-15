@@ -1,4 +1,11 @@
 // 开头结尾dummy node非常牛批
+/* Follow up
+Singly List 是否可行?
+
+可以,在 Hash 中存储 Singly List 中的 prev node 即可
+如 linked list = dummy->1->2->3->null 时
+hash[1] = dummy, hash[2] = node1 ...
+*/
 class ListNode {
     int key;
     int val;
