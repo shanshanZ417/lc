@@ -1,0 +1,17 @@
+// clone with HashMap
+class Solution {
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>();
+        Node dummy = head;
+        while (head != null) {
+            Node node = new Node(head.val);
+            map.put(head, node);
+            head = head.next;
+        }
+        for (Node n : map.keySet()) {
+            map.get(n).next = map.get(n.next);
+            map.get(n).random = map.get(n.random);
+        }
+        return map.get(dummy);
+    }
+}
