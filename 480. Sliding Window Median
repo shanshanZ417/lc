@@ -1,4 +1,4 @@
-// heap 日你妈了
+// heap 遇到median的问题，想到用minheap&maxheap去联合解决
 class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
         double[] res = new double[nums.length - k + 1];
@@ -11,9 +11,9 @@ class Solution {
                 res[index++] = findMedian(minheap, maxheap);
                 int prev = i - (k - 1);
                 if (maxheap.contains(nums[prev])) {
-                maxheap.remove(nums[prev]);
+                    maxheap.remove(nums[prev]);
                 } else {
-                minheap.remove(nums[prev]);
+                    minheap.remove(nums[prev]);
                 }
             }
         }
