@@ -1,0 +1,74 @@
+// Sol 1: pq
+//The advantage of this solution is it can deal with real-time(online) stream data. It does not have to know the size of the data previously.
+//The disadvatage of this solution is it is not the most efficient solution.
+
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        PriorityQueue<int[]> maxheap = new PriorityQueue<>((a, b) -> b[0] * b[0] + b[1] * b[1] - a[0] * a[0] - a[1] * a[1]);
+        for (int[] p : points) {
+            maxheap.offer(p);
+            if (maxheap.size() > K) {
+                maxheap.poll();
+            }
+        }
+        int[][] res = new int[K][2];
+        while (K > 0) {
+            res[--K] = maxheap.poll();
+        }
+        return res;
+    }
+}
+
+//Sol 2: sort
+// The advantages of this solution are short, intuitive and easy to implement.
+// The disadvatages of this solution are not very efficient and have to know all of the points previously, and it is unable to deal with real-time(online) case, it is an off-line solution
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        Arrays.sort(points, (p1, p2) -> p1[0] * p1[0] + p1[1] * p1[1] - p2[0] * p2[0] - p2[1] * p2[1]);
+        return Arrays.copyOfRange(points, 0, K);
+    }
+}
+
+// Sol 3: quick sort
+// Theoretically, the average time complexity is O(N) , but just like quick sort, in the worst case, this solution would be degenerated to O(N^2), and pratically, the real time it takes on leetcode is 15ms.
+//The advantage of this solution is it is very efficient.
+//The disadvatage of this solution are it is neither an online solution nor a stable one. And the K elements closest are not sorted in ascending order.
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        helper(points, 0, points.length - 1, K);
+        return Arrays.copyOfRange(points, 0, K);
+    }
+    private void helper(int[][] A, int s, int e, int k) {
+        if (s >= e) {
+            return;
+        }
+        int l = s;
+        int r = e;
+        int[] pivot = A[s + (e - s) / 2];
+        while (l <= r) {
+            while (l <= r && compare(A[l], pivot) < 0) {
+                l++;
+            }
+            while (l <= r && compare(A[r], pivot) > 0) {
+                r--;
+            }
+            if (l <= r) {
+                int[] tmp = A[l];
+                A[l] = A[r];
+                A[r] = tmp;
+                l++;
+                r--;
+            }
+        }
+        if (k <= r) {
+            helper(A, s, r, k);
+        }
+        if (k >= l) {
+            helper(A, l, e, k);
+        }
+    }
+    private int compare(int[] A, int[] B) {
+        return A[0] * A[0] + A[1] * A[1] - B[0] * B[0] - B[1] * B[1]; 
+        
+    }
+}
