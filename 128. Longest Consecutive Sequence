@@ -1,0 +1,98 @@
+/*
+讨论：
+1. 有duplicate的可能性 11234 -> 1234 -> 4
+*/
+// sol3: 普普通通更新下边界
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int max = Integer.MIN_VALUE;
+        for (int i : nums) {
+            if (map.containsKey(i)) {
+                continue;
+            } else {
+                int prev = map.containsKey(i - 1) ? map.get(i - 1) : 0;
+                int next = map.containsKey(i + 1) ? map.get(i + 1) : 0;
+                int length = prev + next + 1;
+                max = Math.max(max, length);
+                map.put(i, length);
+                if (prev != 0) {
+                    map.put(i - prev, length);
+                }
+                if (next != 0) {
+                    map.put(i + next, length);
+                }
+            }
+        }
+        return max == Integer.MIN_VALUE ? 0 : max;
+    }
+}
+
+// sol2: union find
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        Map<Integer, Integer> parent = new HashMap<>();
+        for (int i : nums) {
+            set.add(i);
+            parent.put(i, i);
+        }
+        for (int i : nums) {
+            int prev = find(i - 1, parent);
+            int next = find(i + 1, parent);
+            int p = find(i, parent);
+            if (prev != Integer.MIN_VALUE && prev != p) {
+                parent.put(prev, p);
+            }
+            if (next != Integer.MIN_VALUE && next != p) {
+                parent.put(next, p);
+            }
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+        int res = Integer.MIN_VALUE;
+        for (int key : parent.keySet()) {
+            int p = find(key, parent);
+            map.put(p, map.getOrDefault(p, 0) + 1);
+            res = Math.max(res, map.get(p));
+        }
+        return res == Integer.MIN_VALUE ? 0 : res;
+    }
+    private int find(int node, Map<Integer, Integer> parent) {
+        if (!parent.containsKey(node)) {
+            return Integer.MIN_VALUE;
+        }
+        int x = node;
+        while (x != parent.get(x)) {
+            x = parent.get(x);
+        }
+        while (node != x) {
+            int p = parent.get(node);
+            parent.put(node, x);
+            node = p;
+        }
+        return node;
+    }
+}
+
+// sol1: brute force sort + two pointers
+// O(nlogn) + change the nums structure
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        Arrays.sort(nums);
+        int s = 0;
+        int e = 0;
+        int max = Integer.MIN_VALUE;
+        while (e < nums.length) {
+            int duplicate = 0;
+            while (e < nums.length && (s == e || nums[e] == nums[e - 1] || nums[e] == nums[e - 1] + 1)) {
+                if (e > s && nums[e] == nums[e - 1]) {
+                    duplicate++;
+                }
+                e++;
+            }
+            max = Math.max(e - s - duplicate, max);
+            s = e;
+        }
+        return max == Integer.MIN_VALUE ? 0 : max;
+    }
+}
