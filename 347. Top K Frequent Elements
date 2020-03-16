@@ -1,4 +1,4 @@
-// bucket sort
+// bucket sort 看到frequency可以想一下lfu
 class Solution {
     public List<Integer> topKFrequent(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();
