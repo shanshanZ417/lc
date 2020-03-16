@@ -54,3 +54,40 @@ class Solution {
         nums[i] = temp;
     }
 }
+
+// quick select partition 版本
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        return helper(0, nums.length - 1, nums.length - k, nums);
+    }
+    private int helper(int s, int e, int k, int[] nums) {
+        if (s >= e) {
+            return nums[k];
+        }
+        int l = s;
+        int r = e;
+        int pivot = nums[s + (e - s) / 2];
+        while (l <= r) {
+            while (l <= r && nums[l] < pivot) {
+                l++;
+            }
+            while (l <=r && nums[r] > pivot) {
+                r--;
+            }
+            if (l <= r) {
+                int tmp = nums[r];
+                nums[r] = nums[l];
+                nums[l] = tmp;
+                l++;
+                r--;
+            }
+        }
+        if (r >= k) {
+            return helper(s, r, k, nums);
+        }
+        if (l <= k) {
+            return helper(l, e, k, nums);
+        }
+        return nums[k];
+    }
+}
