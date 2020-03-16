@@ -19,3 +19,5 @@ class Solution {
         return matrix[cur / n][cur % n];
     }
 }
+
+// 也可以binary search
