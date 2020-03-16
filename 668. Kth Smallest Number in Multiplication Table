@@ -1,0 +1,25 @@
+class Solution {
+    public int findKthNumber(int m, int n, int k) {
+        int s = 1;
+        int e = m * n;
+        while (s < e) {
+            int mid = s + (e - s) / 2;
+            int count = countHelper(mid, m, n);
+            // count = k 不返回因为可能mid不在Multiplication table中
+            if (count >= k) {
+                e = mid;
+            } else {
+                s = mid + 1;
+            }
+        }
+        return e;
+    }
+    private int countHelper(int mid, int m, int n) {
+        int count = 0;
+        for (int i = 1; i <= m; i++) {
+            // 每一个行最大是 i * n = v; 
+            count += Math.min(mid / i, n);
+        }
+        return count;
+    }
+}
