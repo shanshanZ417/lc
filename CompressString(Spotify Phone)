@@ -1,0 +1,25 @@
+/* AA -> A2
+ABBC -> A1B2C1
+*/
+public class Solution {
+    public static void main(String[] args) {
+        Solution test = new Solution();
+        
+        System.out.println(test.compressString(""));
+        System.out.println(test.compressString("AABBC"));
+        
+    }
+    private String compressString(String str) {
+        StringBuilder sb = new StringBuilder();
+        int s = 0;
+        int e = 0;
+        while (e < str.length()) {
+            while (e < str.length() && str.charAt(e) == str.charAt(s)) {
+                e++;
+            }
+            sb.append(str.charAt(s)).append(e - s);
+            s = e;
+        }
+        return sb.toString();
+    }
+}
