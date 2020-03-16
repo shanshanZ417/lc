@@ -1,3 +1,5 @@
+// 看到frequency 可以用一下bucket sort（lfu）
+
 // hashmap + minheap
 class Solution {
     public List<String> topKFrequent(String[] words, int k) {
