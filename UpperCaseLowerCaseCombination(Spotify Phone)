@@ -1,0 +1,23 @@
+// string “abc”, 输出所有大小写combination, "Abc" "abc" "aBc" 等总共8个
+public class Main {
+    public static void main(String[] args) {
+        String s = "abc";
+        Main test = new Main();
+        for (String str : test.findCombination(s)) {
+            System.out.println(str);
+        }
+    }
+    private List<String> findCombination(String s) {
+        List<String> res = new ArrayList<>();
+        dfs(s, 0, "", res);
+        return res;
+    }
+    private void dfs(String s, int index, String cur, List<String> res) {
+        if (cur.length() == s.length()) {
+            res.add(cur);
+            return;
+        }
+        dfs(s, index + 1, cur + s.charAt(index), res);
+        dfs(s, index + 1, cur + Character.toUpperCase(s.charAt(index)), res);
+    }
+}
