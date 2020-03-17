@@ -1,3 +1,6 @@
+// 拓展： 如果想把circle打出来。
+// https://www.cnblogs.com/tenosdoit/p/3644225.html
+
 // sol 1: dfs
 /*
 所有node dfs一直遍历下去，遇到visited的那肯定就是loop了。
