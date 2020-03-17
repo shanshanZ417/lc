@@ -2,6 +2,12 @@
 // 开始我想的是找有没有indegree为0的，如果没有blabla。但这样只能知道有没有环，不能知道是哪条让他没成为tree
 
 /*
+directed graph中没有loop的条件
+1. 有且只有一个node是完全没有indegree的，就是root。
+2. 剩下的的node都必须只有一个indegree，不能>=2（那就有loop了）
+*/
+
+/*
 directed graph中成为tree两个条件
 1. 有且只有一个node是完全没有indegree的，就是root。
 2. 剩下的的node都必须只有一个indegree，不能没有（那就隔离了），不能>=2（那就有loop了）
