@@ -1,0 +1,33 @@
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+        int[] nums = new int[]{99, 2, 98, 1, 99, 99, 1};
+        int target = 100;
+        Main test = new Main();
+        for (int[] l : test.twoSumVarious(nums, target)) {
+            System.out.println("first " + l[0] + "second " + l[1]);
+        }
+    }
+    private List<int[]> twoSumVarious(int[] nums, int target) {
+        List<int[]> res = new ArrayList<>();
+        Map<Integer, List<Integer>> mapper = new HashMap<>();
+        for (int i =0; i < nums.length; i++) {
+            if (mapper.containsKey(target - nums[i])) {
+                for (int candidate : mapper.get(target - nums[i])) {
+                    res.add(new int[]{nums[candidate], nums[i]});
+                }
+            }
+            if (!mapper.containsKey(nums[i])) {
+                mapper.put(nums[i], new ArrayList<>());
+            }
+            mapper.get(nums[i]).add(i);
+        }
+        return res;
+    }
+}
+/*
+two sum变种
+假设输入的数组是1, 2, 98, 99, 99，target要求是100，要求的输出是
+-> [2,98] [1,99] [1,99]
+*/
