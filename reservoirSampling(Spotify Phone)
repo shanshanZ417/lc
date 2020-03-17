@@ -1,0 +1,28 @@
+/*
+Reservoir sampling is a family of randomized algorithms for randomly choosing k samples from a list of n items,
+where n is either a very large or unknown number. Typically n is large enough that the list doesn’t fit into main memory.
+For example, a list of search queries in Google and Facebook.
+https://blog.csdn.net/ict2014/article/details/52200906
+*/
+public class Main {
+    public static void main(String[] args) {
+        Main test = new Main();
+        for (int i : test.reservoirSampling(4, 30)) {
+            System.out.println(i);
+        }
+    }
+    private int[] reservoirSampling(int k, int n) {
+        int[] res = new int[k];
+        Random rand = new Random();
+        for (int i = 0; i < k; i++) {
+            res[i] = i;
+        }
+        for (int i = k; i < n; i++) {
+            int j = rand.nextInt(i + 1);
+            if (j < k) {
+                res[j] = i;
+            }
+        }
+        return res;
+    }
+}
