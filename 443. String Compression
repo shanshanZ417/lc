@@ -1,0 +1,22 @@
+// two pointers with one pointer to keep track of index
+class Solution {
+    public int compress(char[] chars) {
+        int s = 0;
+        int e = 0;
+        int index = 0;
+        while (e < chars.length) {
+            while (e < chars.length && chars[e] == chars[s]) {
+                e++;
+            }
+            chars[index++] = chars[s];
+            if (e - s > 1) {
+                String str = String.valueOf(e - s);
+                for (int i = 0; i < str.length(); i++) {
+                    chars[index++] = str.charAt(i);
+                }
+            }
+            s = e;
+        }
+        return index;
+    }
+}
