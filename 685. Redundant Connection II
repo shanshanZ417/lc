@@ -1,5 +1,24 @@
 // https://www.cnblogs.com/grandyang/p/8445733.html
+// 开始我想的是找有没有indegree为0的，如果没有blabla。但这样只能知道有没有环，不能知道是哪条让他没成为tree
 
+/*
+directed graph中成为tree两个条件
+1. 有且只有一个node是完全没有indegree的，就是root。
+2. 剩下的的node都必须只有一个indegree，不能没有（那就隔离了），不能>=2（那就有loop了）
+*/
+
+/*
+没loop，返回indegree=2后一条
+有loop没indegree2，返回组成loop的
+有loop和indegree2，返回组成loop且indegree2的（我们需要判断first和second谁组成了loop，那么就把要把second拿出去，如果还有loop，说明1组成的
+没有的话，正好和fail in 情况1，返回second）
+
+-> first -> indegree 前
+-> second -> indegree 后
+
+-> 有loop，发现没有first，返回组成loop的边（情况2）；有first，返回first（情况3，要把second拿出去，这样就知道是谁组成的loop）
+-> 没loop，返回second（情况1）
+*/
 // uf 真的牛逼
 class Solution {
     public int[] findRedundantDirectedConnection(int[][] edges) {
