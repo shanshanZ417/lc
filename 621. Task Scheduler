@@ -1,0 +1,39 @@
+// greedy + pq
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        PriorityQueue<int[]> maxheap = new PriorityQueue<>((t1, t2) -> t2[1] - t1[1]);
+        int[] mapper = new int[26]; 
+        for (char c : tasks) {
+            mapper[c - 'A']++;
+        }
+        for (int i = 0; i < mapper.length; i++) {
+            if (mapper[i] == 0) {
+                continue;
+            }
+            maxheap.offer(new int[]{i, mapper[i]});
+        }
+        int res = 0;
+        while (!maxheap.isEmpty()) {
+            int num = n + 1;
+            List<int[]> list = new ArrayList<>();
+            while (num > 0 && !maxheap.isEmpty()) {
+                int[] cur = maxheap.poll();
+                // System.out.println(cur.name);
+                cur[1]--;
+                if (cur[1] > 0) {
+                    list.add(cur);
+                }
+                num--;
+                res++;
+                // System.out.println(res);
+            }
+            for (int[] t : list) {
+                maxheap.offer(t);
+            }
+            if (!maxheap.isEmpty()) {res += num;}
+            // System.out.println("here " + res);
+
+        }
+        return res;
+    }
+}
