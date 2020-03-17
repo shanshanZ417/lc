@@ -1,0 +1,16 @@
+// two pointers
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        int s = 1;
+        int e = 1;
+        while (e < nums.length) {
+            if (e < nums.length && nums[e] == nums[e - 1]) {
+                e++;
+            } else {
+                nums[s++] = nums[e];
+                e++;
+            }
+        }
+        return s;
+    }
+}
