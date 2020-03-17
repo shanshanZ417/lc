@@ -1,0 +1,74 @@
+// Sol 2 ：把两个dp合并起来 厉害了
+class Solution {
+    public int minCut(String s) {
+        int len = s.length();
+        int[] dp = new int[len];
+        boolean[][] isPalindrome = new boolean[len][len];
+        for (int i = 0; i < len; i++) {
+            int min = i;
+            for (int j = 0; j <= i; j++) {
+               if (s.charAt(i) == s.charAt(j) && (j + 1 > i - 1 || isPalindrome[j + 1][i - 1] )) {
+                   isPalindrome[j][i] = true;
+                   min = j == 0 ? 0 : Math.min(min, dp[j - 1] + 1);
+               }
+            }
+            dp[i] = min;
+        }
+        return dp[len - 1];
+    }
+}
+
+
+// Sol 1 ：自己的解法，写了两个dp。
+class Solution {
+    public int minCut(String s) {
+        int[] dp = new int[s.length() + 1];
+        dp[0] = 0;
+        dp[1] = 0;
+        boolean[][] isPalindrome = buildPalindrome(s);
+        for (int i = 2; i < s.length() + 1; i++) {
+            int min = i;
+            for (int j = 0; j < i; j++) {
+               if (isPalindrome[j][i - 1]) {
+                   min = j == 0 ? 0 : Math.min(min, dp[j] + 1);
+               } 
+            }
+            dp[i] = min;
+        }
+        return dp[s.length()];
+    }
+    private boolean[][] buildPalindrome(String s) {
+        int len = s.length();
+        boolean[][] isPalindrome = new boolean[len][len];
+        for (int i = 0; i < len; i++) {
+            isPalindrome[i][i] = true;
+        }
+        for (int i = 0; i < len - 1; i++) {
+            isPalindrome[i][i + 1] = s.charAt(i) == s.charAt(i + 1);
+        }
+        for (int i = len - 3; i >= 0; i--) {
+            for (int j = i + 2; j < len; j++) {
+                isPalindrome[i][j] = isPalindrome[i + 1][j - 1] && s.charAt(i) == s.charAt(j);
+            }
+            isPalindrome[i][i + 1] = s.charAt(i) == s.charAt(i + 1);
+        }
+        return isPalindrome;
+    }
+    // private boolean isPalindrome(String str, int s, int e) {
+    //     while (s <= e) {
+    //         if (str.charAt(s++) != str.charAt(e--)) {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+}
+
+// no greedy
+// dp
+/*
+aabb = aabb a abb aa bb aab b
+aab = aab a ab aa b = 1
+aa aa a a dp[2] = 1
+a dp[1] = 1
+*/
