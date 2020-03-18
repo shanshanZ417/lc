@@ -16,3 +16,21 @@ class Solution {
         return dp[nums.length - 1];
     }
 }
+
+
+// 甚至可以不用array存储，因为只和前一个有关
+class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int secPrev = 0;
+        int prev = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            int temp = secPrev + nums[i];
+            secPrev = prev;
+            prev = Math.max(temp, prev);
+        }
+        return prev;
+    }
+}
