@@ -1,0 +1,93 @@
+// sol 1: stack 不用自己写一个object了
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+        Deque<Integer> stack = new LinkedList<>(); 
+        int[] res = new int[n];
+        int prevTime = 0;
+        for (String log : logs) {
+            String[] l = log.split(":");
+            int id = Integer.valueOf(l[0]);
+            int time = Integer.valueOf(l[2]);
+            if (stack.isEmpty()) {
+                stack.offerLast(id);
+                prevTime = time;
+                continue;
+            }
+            if (l[1].equals("start")) {
+                res[stack.peekLast()] += time - prevTime;
+                prevTime = time;
+                stack.offerLast(id);
+            } else {
+                res[stack.peekLast()] += time - prevTime + 1;
+                prevTime = time + 1;
+                stack.pollLast();
+            }
+        }
+        return res;
+    }
+}
+
+
+// sol 1: stack 渣解法
+/*
+0:start:0, 1:start:1, 2:start:3, 2:end:4, 1:end:5, 0:end:6
+
+0 1 + 1
+1 2 + 1
+2 1
+
+0:start:0, 1:start:1, 1:end:3, 2:start:4, 2:end:5, 0:end:6
+0 ->  1 + 1 + 1
+1 ->  2
+2 ->  1
+
+0:start:0, 1:start:1, 1:end:3, 2:start:3, 2:end:5, 0:end:6 
+stack 0(5)
+0 ->  1  + 1
+1 ->  2
+2 ->  2
+*/
+
+class Task {
+    int id;
+    int time;
+    boolean isStart;
+    public Task (int id) {
+        this.id = id;
+    } 
+}
+class Solution {
+    public int[] exclusiveTime(int n, List<String> logs) {
+        List<Task> tasks = new ArrayList<>();
+        // store in list 
+        for (String log : logs) {
+            String[] l = log.split(":");
+            Task task = new Task(Integer.valueOf(l[0]));
+            task.isStart = l[1].equals("start");
+            task.time = (task.isStart) ? Integer.valueOf(l[2]) : Integer.valueOf(l[2]) + 1 ;
+            tasks.add(task);
+        }
+        // sort by time 
+        Collections.sort(tasks, (t1, t2) -> (t1.time - t2.time));
+        // stack to 
+        Deque<Task> stack = new LinkedList<>(); 
+        int[] res = new int[n];
+        for (Task task : tasks) {
+            if (stack.isEmpty()) {
+                stack.offerLast(task);
+                continue;
+            }
+            Task cur = stack.peekLast();
+            res[cur.id] += task.time - cur.time;
+            if (task.isStart) {
+                stack.offerLast(task);
+            } else {
+                stack.pollLast();
+                if (!stack.isEmpty()) {
+                    stack.peekLast().time = task.time;
+                }
+            }
+        }
+        return res;
+    }
+}
