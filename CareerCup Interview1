@@ -1,0 +1,152 @@
+/*
+You're a robber who is planning to rob some of the houses on a block. 
+You've cased all of the houses, so you know the value of robbing each house. 
+But if you rob a house, the owner will tell his immediate neighbors, and they'll 
+be watching for you — so you can't rob any two adjacent houses. 
+
+Write a function to find the maximum value you can get from robbing the houses. 
+*/
+
+// [1 2 3 4 5 6];
+// n*(n - 1)*(n -2) ...*1 = n! 
+  
+// [5, 8, 8, -3, 4-, 5]
+
+// result = 5 + 8 + 5 = 18 [-3 -5 -3 -9 -4, 1]
+
+
+public int robbingHouse(int[] values) {
+  int[] loss = new int[values.length];
+  for (int i = 0; i < values.length; i++) {
+    loss[i] = loss[i] - (i == 0 ? 0 : loss[i - 1]) - (i == values.length - 1 ? 0 : loss[i + 1]);
+  }
+  PriorityQueue<Map<Integer, Integer>> maxheap = new PriorityQueue<>(new Comparator<>(){
+    // index -> loss
+    return entry2.getValue() - entry1.getValue();
+  });
+  Set<Integer> unableRobbing = new HashSet<>();
+  int res = 0;
+  while (!maxheap.isEmpty()) {
+    int cur = maxheap.poll();
+    if (unableRobbing.contains(cur)) {
+      continue;
+    }
+    res += values[cur];
+    if (i > 0 ) {
+        unableRobbing.add(cur - 1);
+    } 
+    if (i < values.length - 1) {
+      unableRobbing.add(cur + 1);
+    }
+  }
+  return res;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+Write a function that takes an input string and a character set and returns the minimum-length substring which contains every letter of the character set at least once, in any order
+If you don't find a match, return an empty string
+
+assume len(str) = n; len(set) = k 
+
+*/
+/* set = {a, e, w}
+ * map = {a -> 1, e -> -3, w ->0};
+ * size = 2
+ * len = 6
+ * index = {3, 8}
+ *str = lppaeeeew
+            s
+                i  
+              
+ */
+public String findMinimumSubstring(String str, Set<Character> set) {
+  int len = Integer.MAX_VALUE:
+  int[] index = new int[]{0, 0};
+  Map<Character, Integer> map = new HashMap<>();
+  int s = 0;
+  for (Character c : set) {
+    map.put(c, 1);
+  }
+  int size = 0;
+  for (int i = 0; i < str.length(); i++) {
+    if (size != set.size()) {
+      char c = str.charAt(i);
+      if (set.contains(c)) {
+        map.put(c, map.get(c) - 1);
+        if (map.get(c) == 0) {
+          size++;
+        }
+      }
+    }
+    while (size == set.size()) {
+      if (i - s < len) {
+        len = i - s;
+        index[0] = i;
+        index[1] = e;
+      }
+      char c = str.charAt(s);
+      if (set.contains(c)) {
+        map.put(c, map.get(c) + 1);
+        if (map.get(c) == 1) {
+          size--;
+        }
+      }
+      s++;
+    }
+  }
+  return len == Integer.MAX_VALUE ? "" : str.substring(index[0], index[1] + 1);
+}
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+/*
+int res
+int[] = new int[2];
+set = {a, e, w}
+int size = 3 - 1
+HashMap
+{char, 1}
+
+str = lppaeeeew
+      s
+               e
+                 
+int s
+int e
+*/
+
