@@ -1,0 +1,64 @@
+// TODO可以重新改写 简写
+class Solution {
+    public List<String> generatePalindromes(String s) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        List<String> res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+        String middle = "";
+        for(Map.Entry<Character, Integer> entry : map.entrySet()) {
+            int num = entry.getValue();
+            count += num % 2;
+            if (num % 2 == 1) {
+                middle = String.valueOf(entry.getKey());
+            }
+            num = num / 2;
+            while (num > 0) {
+                sb.append(entry.getKey());
+                num--;
+            }
+        }
+        if (count != 0 && count != 1) {
+            return new ArrayList<>();
+        }
+        // System.out.println(sb.toString());
+        boolean[] visited = new boolean[sb.length()];
+        List<String> half = new ArrayList<>();
+        char[] array = sb.toString().toCharArray();
+        Arrays.sort(array);
+        // System.out.println(new String(array));
+        dfs(array, visited, "", half);
+        return buildWholePalindrome(half, middle);
+    }
+    private void dfs(char[] array, boolean[] visited, String cur, List<String> half) {
+        if (cur.length() == array.length) {
+            half.add(cur);
+            return;
+        }
+        for (int i = 0; i < array.length; i++) {
+            if (visited[i] || (i != 0 && array[i] == array[i - 1] && !visited[i - 1])) {
+                continue;
+            }
+            visited[i] = true;
+            dfs(array, visited, cur + array[i], half);
+            visited[i] = false;
+        }
+    }
+    private List<String> buildWholePalindrome(List<String> half, String middle) {
+        List<String> res = new ArrayList<>();
+        for (String h : half) {
+            res.add(h + middle + reverse(h));
+        }
+        return res;
+    }
+    private String reverse(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = s.length() - 1; i >= 0; i--) {
+            sb.append(s.charAt(i));
+        }
+        return sb.toString();
+    }
+}
