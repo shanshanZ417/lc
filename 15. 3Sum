@@ -1,0 +1,49 @@
+/*
+brute force
+O(n^3)
+
+remove duplicate -> sort
+[-1, 0, 1, 2, -1, -4]
+[-4, -1, -1, 0, 1, 2]
+      i
+          s      
+                    e
+
+*/
+
+// two pointers
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        for (int i = 0; i <= nums.length - 3; i++) {
+            if (i != 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            helper(i, nums, res);
+        }
+        return res;
+    }
+    private void helper(int index, int[] nums, List<List<Integer>> res) {
+        int s = index + 1;
+        int e = nums.length - 1;
+        int target = -nums[index];
+        while (s < e) {
+            if (s != index + 1 && nums[s] == nums[s - 1]) {
+                s++;
+            } else if (e != nums.length - 1 && nums[e] == nums[e + 1]) {
+                e--;
+            } else {
+                int sum = nums[s] + nums[e];
+                if (sum == target) {
+                    List<Integer> cur = Arrays.asList(nums[index], nums[s++], nums[e--]);
+                    res.add(cur);
+                } else if (sum < target) {
+                    s++;
+                } else {
+                    e--;
+                }
+            } 
+        }
+    }
+}
