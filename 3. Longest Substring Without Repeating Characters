@@ -1,23 +1,77 @@
 // two pointers + substring 模版
+/*
+int res = 0;
+abcabcbb
+       i
+       j
+brute force: O(n^3)
+
+
+int max = 0;
+max -> max, i - s + 1;
+int s = 0;
+Map<Character, Integer> map;
+{
+a -> 1
+b -> 1
+c -> 0
+}
+int duplicate = 0;
+abcabcbb
+        i
+  s
+
+for (i from 0 to s.len() - 1)
+update the map
+update the duplicate
+while (has duplicate) {
+    update map;
+    move s;
+}
+update the len;
+*/
+
+// follow up: no need two pointers
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        Map<Character, Integer> count = new HashMap<>();
-        int start = 0;
-        int end = 0;
         int max = 0;
-        int total = 0;
-        while (end < s.length()) {
-            count.put(s.charAt(end), count.getOrDefault(s.charAt(end), 0) + 1);
-            if (count.get(s.charAt(end++)) > 1) {
-                total++;
+        int duplicate = 0;
+        int start = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char end = s.charAt(i);
+            if (map.containsKey(end) && map.get(end) >= start) {
+                start = map.get(end) + 1;
             }
-            while (start < end && total >= 1) {
-                count.put(s.charAt(start), count.get(s.charAt(start)) - 1);
-                if (count.get(s.charAt(start++)) == 1) {
-                    total--;
+            map.put(end, i);
+            max = Math.max(max, i - start + 1);
+        }
+        return max;
+    }
+}
+
+// two pointer.
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int max = 0;
+        int st = 0;
+        int duplicate = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s.length(); i++) {
+            char end = s.charAt(i);
+            map.put(end, map.getOrDefault(end, 0) + 1);
+            if (map.get(end) == 2) {
+                duplicate++;
+            }
+            while (duplicate == 1) {
+                char start = s.charAt(st);
+                map.put(start, map.get(start) - 1);
+                if (map.get(start) == 1) {
+                    duplicate--;
                 }
+                st++;
             }
-            max = Math.max(end - start, max);
+            max = Math.max(max, i - st + 1);
         }
         return max;
     }
