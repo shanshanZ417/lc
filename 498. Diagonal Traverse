@@ -1,0 +1,47 @@
+/*
+if (x + y) % 2 == 0 -> go up
+if last column -> go down
+if first row not last column -> go right
+
+else -> go down
+if first colum not last row -> go down
+last row -> go right
+
+*/
+// 找规律，对我来说太难了 难就要多看
+class Solution {
+    public int[] findDiagonalOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return new int[]{};
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[] res = new int[m * n];
+        int index = 0;
+        int x = 0;
+        int y = 0;
+        while (index < m * n) {
+            res[index++] = matrix[x][y];
+            if ((x + y) % 2 == 0) {
+                if (y == n - 1) {
+                    x++;
+                } else if (x == 0 && y != n - 1) {
+                    y++;
+                } else {
+                    x--;
+                    y++;
+                }
+            } else {
+                if (x == m - 1) {
+                    y++;
+                } else if (y == 0 && x != m - 1) {
+                    x++;
+                } else {
+                    x++;
+                    y--;
+                }
+            }
+        }
+        return res;
+    }
+}
