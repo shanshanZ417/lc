@@ -1,0 +1,29 @@
+class Solution {
+    public String tictactoe(int[][] moves) {
+        int[] xrow = new int[3];
+        int[] xcol = new int[3];
+        int[] orow = new int[3];
+        int[] ocol = new int[3];
+        int xD1 = 0;
+        int xD2 = 0;
+        int oD1 = 0;
+        int oD2 = 0;
+        int index = 0;
+        for (int[] move : moves) {
+            int i = move[0];
+            int j = move[1];
+            if (index % 2 == 0) {
+                if (++xrow[i] == 3 || ++xcol[j] == 3 || i == j && ++xD1 == 3 || i + j == 2 && ++xD2 == 3) {
+                    return "A";
+                }
+            } else {
+                if (++orow[i] == 3 || ++ocol[j] == 3 || i == j && ++oD1 == 3 || i + j == 2 && ++oD2 == 3) {
+                    return "B";
+                }
+    
+            }
+            index++;
+        }
+        return moves.length == 9 ? "Draw" : "Pending";
+    }
+}
