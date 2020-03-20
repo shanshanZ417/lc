@@ -18,6 +18,7 @@ map<Character, Integer>
 maxheap<Char> 
 
 */
+// gready sort(pq)
 class Solution {
     public String reorganizeString(String S) {
         if (S == null || S.isEmpty()) {
