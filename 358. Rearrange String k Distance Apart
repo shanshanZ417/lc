@@ -1,0 +1,54 @@
+/*
+
+ca be
+abca
+ab = A
+AxAxA
+if not possible:
+(max - 1) * (k - numOfMax) > s.length() - numOfMax*max;
+else:
+
+*/
+
+
+class Solution {
+    public String rearrangeString(String s, int k) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : s.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        PriorityQueue<Character> maxheap = new PriorityQueue<>((c1, c2) -> (map.get(c2) - map.get(c1)));
+        for (char c : map.keySet()) {
+            maxheap.offer(c);
+        }
+        char top = maxheap.peek();
+        List<Character> maxChar = new ArrayList<>();
+        while (!maxheap.isEmpty() && map.get(top) == map.get(maxheap.peek())) {
+            maxChar.add(maxheap.poll());
+        }
+        for (char c : maxChar) {
+            maxheap.offer(c);
+        }
+        int numOfMaxChar = maxChar.size();
+        // System.out.println(numOfMaxChar);
+        if ((map.get(top) - 1) * (k - numOfMaxChar) > s.length() - numOfMaxChar * map.get(top)) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        Deque<Character> queue = new LinkedList<>();
+        while (!maxheap.isEmpty()) {
+            char cur = maxheap.poll();
+            sb.append(cur);
+            map.put(cur, map.get(cur) - 1);
+            queue.offerLast(cur);
+            if (queue.size() < k) {
+                continue;
+            }
+            char next = queue.pollFirst();
+            if (map.get(next) > 0) {
+                maxheap.offer(next);
+            }
+        }
+        return sb.toString();
+    }
+}
