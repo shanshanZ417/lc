@@ -1,0 +1,45 @@
+// 找规律 为什么这么机智
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return new ArrayList<>();
+        }
+        List<Integer> res = new ArrayList<>();
+        int top = 0;
+        int bot = matrix.length - 1;
+        int left = 0;
+        int right = matrix[0].length - 1;
+        while (top < bot && left < right) {
+            for (int i = left; i < right; i++) {
+                res.add(matrix[top][i]);
+            }
+            for (int i = top; i < bot; i++) {
+                res.add(matrix[i][right]);
+            }
+            for (int i = right; i > left; i--) {
+                res.add(matrix[bot][i]);
+            }
+            for (int i = bot; i > top;i--) {
+                res.add(matrix[i][left]);
+            }
+            top++;
+            bot--;
+            left++;
+            right--;
+        }
+        if (top > bot || left > right) {
+            return res;
+        }
+        if (left == right) {
+            while (top <= bot) {
+                res.add(matrix[top++][left]);
+            }
+        }
+        if (top == bot) {
+            while (left <= right) {
+                res.add(matrix[top][left++]);
+            }
+        }
+        return res;
+    }
+}
