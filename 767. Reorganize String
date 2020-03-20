@@ -1,51 +1,57 @@
 /*
-aaabbc
-Map<Character, Integer> map
-a 3
-b 2
-c 1
-<Map.Entry<Character, Integer>> maxheap sort by values
-if (largest > total - largest + 1) {return""}
-else
-abcaba
+"aab"
+aba
 
+"aabcde"
+abacde
+
+if not possible: 
+s.length - max < max - 1
+else:
+"aaab"
+abaa
+
+aaabbbc
+abababc
+
+map<Character, Integer>
+maxheap<Char> 
 
 */
 class Solution {
     public String reorganizeString(String S) {
-        int[] mapper = new int[26];
+        if (S == null || S.isEmpty()) {
+            return "";
+        }
+        Map<Character, Integer> map = new HashMap<>();
         for (char c : S.toCharArray()) {
-            mapper[c - 'a']++;
+            map.put(c, map.getOrDefault(c, 0) + 1);
         }
-        PriorityQueue<Integer> maxheap = new PriorityQueue<>((i1, i2) -> (mapper[i2] - mapper[i1]));
-        for (int i = 0; i < mapper.length; i++) {
-            if (mapper[i] > 0) {
-                maxheap.offer(i);
-            }
+        PriorityQueue<Character> maxheap = new PriorityQueue<>((c1, c2) -> (map.get(c2) - map.get(c1)));
+        for (char c : map.keySet()) {
+            maxheap.offer(c);
         }
-        int max = mapper[maxheap.peek()];
-        if (max > S.length() - max + 1) {
+        int max = map.get(maxheap.peek());
+        if (S.length() - max < max - 1) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
         while (!maxheap.isEmpty()) {
-            int first = maxheap.poll();
-            char firstChar = (char)(first + 'a');
-            if (sb.length() == 0 || sb.charAt(sb.length() - 1) != firstChar) {
-                sb.append(firstChar);
-                mapper[first]--;
-                if (mapper[first] > 0) {
-                    maxheap.offer(first);
+            char cur = maxheap.poll();
+            if (sb.length() == 0 || sb.charAt(sb.length() - 1) != cur) {
+                sb.append(cur);
+                map.put(cur, map.get(cur) - 1);
+                if (map.get(cur) > 0) {
+                    maxheap.offer(cur);
                 }
             } else {
-                int second = maxheap.poll();
-                char secondChar = (char)(second + 'a');
-                sb.append(secondChar);
-                mapper[second]--;
-                if (mapper[second] > 0) {
-                    maxheap.offer(second);
+                char next = maxheap.poll();
+                sb.append(next);
+                map.put(next, map.get(next) - 1);
+                if (map.get(next) > 0) {
+                    maxheap.offer(next);
                 }
-                maxheap.offer(first);
+                maxheap.offer(cur);
             }
         }
         return sb.toString();
