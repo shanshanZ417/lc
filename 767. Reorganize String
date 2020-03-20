@@ -1,0 +1,53 @@
+/*
+aaabbc
+Map<Character, Integer> map
+a 3
+b 2
+c 1
+<Map.Entry<Character, Integer>> maxheap sort by values
+if (largest > total - largest + 1) {return""}
+else
+abcaba
+
+
+*/
+class Solution {
+    public String reorganizeString(String S) {
+        int[] mapper = new int[26];
+        for (char c : S.toCharArray()) {
+            mapper[c - 'a']++;
+        }
+        PriorityQueue<Integer> maxheap = new PriorityQueue<>((i1, i2) -> (mapper[i2] - mapper[i1]));
+        for (int i = 0; i < mapper.length; i++) {
+            if (mapper[i] > 0) {
+                maxheap.offer(i);
+            }
+        }
+        int max = mapper[maxheap.peek()];
+        if (max > S.length() - max + 1) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!maxheap.isEmpty()) {
+            int first = maxheap.poll();
+            char firstChar = (char)(first + 'a');
+            if (sb.length() == 0 || sb.charAt(sb.length() - 1) != firstChar) {
+                sb.append(firstChar);
+                mapper[first]--;
+                if (mapper[first] > 0) {
+                    maxheap.offer(first);
+                }
+            } else {
+                int second = maxheap.poll();
+                char secondChar = (char)(second + 'a');
+                sb.append(secondChar);
+                mapper[second]--;
+                if (mapper[second] > 0) {
+                    maxheap.offer(second);
+                }
+                maxheap.offer(first);
+            }
+        }
+        return sb.toString();
+    }
+}
