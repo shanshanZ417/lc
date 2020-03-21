@@ -1,0 +1,60 @@
+/*
+[1, 5) [2,7)
+[1 (2 5]  7)
+Math.max(s1, s2) < Math.min(e1, e2) -> overlap
+
+sol1:
+O(n^2)
+O(1)
+
+sol2: 
+start +1
+end - 1
+if count >= 2 return false;
+[time, isStart]
+sort by time
+O(nlogn)
+O(n)
+
+sol3:
+sort by start time
+if e1.start < e1 -1.end return false
+O(nlogn)
+O(1)
+*/
+//sol3
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        Arrays.sort(intervals, (i1, i2) -> (i1[0] - i2[0]));
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] < intervals[i - 1][1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+// sol2
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        List<int[]> times = new ArrayList<>();
+        for (int[] interval : intervals) {
+            times.add(new int[]{interval[0], 1});
+            times.add(new int[]{interval[1], 0});
+        }
+        Collections.sort(times, (t1, t2) -> (t1[0] == t2[0] ? t1[1] - t2[1] : t1[0] - t2[0]));
+        int count = 0;
+        for (int[] time : times) {
+            if (time[1] == 1) {
+                count++;
+            } else {
+                count--;
+            }
+            if (count >= 2) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
