@@ -1,0 +1,30 @@
+// voting 找最多的element
+class Solution {
+    public int majorityElement(int[] nums) {
+        int candidate = nums[0];
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == candidate) {
+                count++;
+            } else {
+                count--;
+            }
+            if (count == 0) {
+                candidate = nums[i];
+                count++;
+            }
+        }
+        return candidate;
+    }
+}
+
+// sorting
+class Solution {
+    public int majorityElement(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        Arrays.sort(nums);
+        return nums[nums.length / 2];
+    }
+}
