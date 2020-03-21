@@ -1,0 +1,70 @@
+/*
+sol1: 
+[[0, 30],[5, 10],[15, 20], [25, 30] 
+- sorting based on start time
+- greedy : choose the earlist finish meeting room (minheap)
+30
+20
+minheap 
+30 30 
+
+O(nlogn + nlogn) 
+O(n)
+
+sol2: 
+[time, ifStart]
+if start count++;
+else count--;
+O(nlogn)
+O(n)
+
+*/
+// sol3: 还有一个sort方法没看
+
+// sol2
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        if (intervals == null || intervals.length == 0) {
+            return 0;
+        }
+        List<int[]> times = new ArrayList<>();
+        for (int[] interval : intervals) {
+            times.add(new int[]{interval[0], 1});
+            times.add(new int[]{interval[1], 0});
+        }
+        Collections.sort(times, (i1, i2) -> (i1[0] == i2[0] ? i1[1] - i2[1] : i1[0] - i2[0]));
+        int count = 0;
+        int res = 1;
+        for (int [] time : times) {
+            // System.out.println(time[0]);
+            // System.out.println(time[1]);
+            if (time[1] == 1) {
+                count++;
+            } else {
+                count--;
+            }
+            res = Math.max(res, count);
+        }
+        return res;
+    }
+}
+// sol1
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        if (intervals == null || intervals.length == 0) {
+            return 0;
+        }
+        Arrays.sort(intervals, (i1, i2) -> (i1[0] - i2[0]));
+        PriorityQueue<Integer> minheap = new PriorityQueue<>();
+        int count = 1;
+        minheap.offer(intervals[0][1]);
+        for (int i = 1; i < intervals.length ; i++) {
+            if (intervals[i][0] >= minheap.peek()) {
+               minheap.poll();
+            }
+            minheap.offer(intervals[i][1]);
+            count = Math.max(count, minheap.size());
+        }
+        return count;
+    }
+}
