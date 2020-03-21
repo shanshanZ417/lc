@@ -1,0 +1,45 @@
+/*
+2*3-4*5
+(2)*(3-4*5)
+    -> (3 - 4) * (5) = 
+    -> (3) - (4 * 5)
+     
+(2*3)-(4*5) = 
+(2*3-4) *(5)
+    -> 2*(3-4) 
+    -> (2*3) - 4
+
+*/
+class Solution {
+    public List<Integer> diffWaysToCompute(String input) {
+        List<Integer> tmp = new ArrayList<>();
+        List<Integer> sign = new ArrayList<>();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c == '-' || c == '+' || c == '*') {
+                sign.add(i);
+            }
+        }
+        if (sign.size() == 0) {
+            tmp.add(Integer.parseInt(input));
+            return tmp;
+        }
+        for (int i : sign) {
+            char c = input.charAt(i);
+            List<Integer> first = diffWaysToCompute(input.substring(0, i));
+            List<Integer> second = diffWaysToCompute(input.substring(i + 1, input.length()));
+            for (int f : first) {
+                for (int s : second) {
+                    if (c == '-') {
+                        tmp.add(f - s);
+                    } else if (c == '+') {
+                        tmp.add(f + s);
+                    } else {
+                        tmp.add(f * s);
+                    }
+                }
+            }
+        }
+        return tmp;
+    }
+}
