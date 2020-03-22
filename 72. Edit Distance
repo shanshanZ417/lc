@@ -1,0 +1,61 @@
+// dp 
+class Solution {
+    public int minDistance(String A, String B) {
+        if (A.isEmpty() || B.isEmpty()) {
+            return A.length() == 0 ? B.length() : A.length();
+        }
+        int lenA = A.length();
+        int lenB = B.length();
+        int[][] memo = new int[lenA + 1][lenB + 1];
+        for (int i = 0; i <= lenA; i++) {
+            memo[i][0] = i;
+        }
+         for (int i = 0; i <= lenB; i++) {
+            memo[0][i] = i;
+        }
+        for (int i = 0; i < lenA; i++) {
+            for (int j = 0; j < lenB; j++) {
+                if (A.charAt(i) == B.charAt(j)) {
+                    memo[i + 1][j + 1] = memo[i][j];
+                    continue;
+                } 
+                int remove = 1 + memo[i + 1][j];
+                int replace = 1 + memo[i][j];
+                int insert = 1 + memo[i][j + 1];
+                memo[i + 1][j + 1] = Math.min(remove, Math.min(replace, insert));
+            }
+        }
+        return memo[lenA][lenB];
+    }
+}
+
+// dfs w memo
+class Solution {
+    public int minDistance(String A, String B) {
+        int[][] memo = new int[A.length()][B.length()];
+        for (int[] m : memo) {
+            Arrays.fill(m, -1);
+        }
+        return helper(0, 0, A, B, memo);
+    }
+    public int helper(int indexA, int indexB, String A, String B, int[][] memo) {
+        if (indexA == A.length() && indexB == B.length()) {
+            return 0;
+        } 
+        if (indexA == A.length() || indexB == B.length()) {
+            return indexA == A.length() ? B.length() - indexB : A.length() - indexA;
+        }
+        if (memo[indexA][indexB] != -1) {
+            return memo[indexA][indexB];
+        }
+        if (A.charAt(indexA) == B.charAt(indexB)) {
+            return helper(indexA + 1, indexB + 1, A, B, memo);
+        }
+        int remove = 1 + helper(indexA + 1, indexB, A, B, memo);
+        int replace = 1 + helper(indexA + 1, indexB + 1, A, B, memo);
+        int insert = 1 + helper(indexA, indexB + 1, A, B, memo);
+        int res = Math.min(Math.min(remove, replace), insert);
+        memo[indexA][indexB] = res;
+        return res;
+    }
+}
