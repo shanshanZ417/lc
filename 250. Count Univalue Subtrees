@@ -1,0 +1,49 @@
+// sol1 👍
+// 最好不要传上一层的value到下一层，这样会让下一层的结果由上一层决定，不是很有必要。
+class Solution {
+    int count = 0;
+    public int countUnivalSubtrees(TreeNode root) {
+        helper(root);
+        return count;
+    }
+    private boolean helper(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        Boolean left = helper(root.left);
+        Boolean right = helper(root.right);
+        if (root.left != null) {
+            left = left && root.val == root.left.val;
+        }
+        if (root.right != null) {
+            right = right && root.val == root.right.val;
+        }
+        if (left && right) {
+            count++;
+        }
+        return left && right;
+    }
+}
+
+// sol2 
+class Solution {
+    int count = 0;
+    public int countUnivalSubtrees(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        helper(root, root.val);
+        return count;
+    }
+    private boolean helper(TreeNode root, int val) {
+        if (root == null) {
+            return true;
+        }
+        boolean left = helper(root.left, root.val);
+        boolean right = helper(root.right, root.val);
+        if (left && right) {
+            count++;
+        }
+        return left && right && root.val == val;
+    }
+}
