@@ -1,0 +1,31 @@
+// dp
+public class Solution {
+    public int solve(int[][] A) {
+        int m = A.length;
+        int n = A[0].length;
+        int len = A.length;
+        int[][] count = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            if (i == 0) {
+                count[0] = A[0];
+                continue;
+            }
+            for (int j = 0; j < n; j++) {
+                count[i][j] = A[i][j] == 0 ? 0 : count[i - 1][j] + 1; 
+            }
+        }
+        int max = 0;
+        for (int i = 0; i < m; i++) {
+            max = Math.max(max, findMaxArea(count[i]));
+        }
+        return max;
+    }
+    private int findMaxArea(int[] h) {
+        int max = 0;
+        Arrays.sort(h);
+        for (int i = 0; i < h.length; i++) {
+            max = Math.max(max, h[i] * (h.length - i));
+        }
+        return max;
+    }
+}
