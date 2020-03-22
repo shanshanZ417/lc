@@ -1,0 +1,25 @@
+// 要注意int n = -n 如果n是Integer.MIN_VALUE, 那 int n就烂了。因为正数 = 负数 - 1；
+// int -> long 可以不用casting
+class Solution {
+    public double myPow(double x, int n) {
+        return helper(x, n);
+    }
+    private double helper(double x, long n) {
+        long N = n;
+        if (N == 0) {
+            return 1.0;
+        }
+        if (N == 1) {
+            return x;
+        }
+        if (N < 0) {
+            x = 1.0/x;
+            N = -N;
+        }
+        double part = helper(x, N / 2);
+        if (N % 2 == 0) {
+            return part * part;
+        }
+        return part * part * x;
+    }
+}
