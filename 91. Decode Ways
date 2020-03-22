@@ -1,0 +1,27 @@
+// dp
+class Solution {
+    public int numDecodings(String A) {
+        if (A == null || A.isEmpty()) {
+            return 0;
+        }
+        int len = A.length();
+        int[] dp = new int[len];
+        if (Integer.parseInt(A.substring(0, 1)) == 0) {
+            return 0;
+        }
+        dp[0] = 1;
+        for (int i = 1; i < len; i++) {
+            dp[i] = 0;
+            for (int j = i - 1; j <= i; j++) {
+                if (A.charAt(j) == '0') {
+                    continue;
+                }
+                if (Integer.parseInt(A.substring(j, i + 1)) <= 26) {
+                    dp[i] += j == 0 ? i : dp[j - 1];
+                }
+            }
+        }
+        return dp[len - 1];
+        
+    }
+}
