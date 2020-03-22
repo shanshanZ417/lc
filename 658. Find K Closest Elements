@@ -31,7 +31,53 @@ class Solution {
 }
 // A[i] - A[i + k - 1]
 
-// 我写的二分是垃圾
+// hlf写的二分比我好太多了
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int index = closet(arr, x);
+        List<Integer> res = new ArrayList<>();
+        int l = index - 1;
+        int r = index + 1;
+        while (k > 1 && l >= 0 && r < arr.length) {
+            if (x - arr[l] <= arr[r] - x) {
+                l--;
+            } else {
+                r++;
+            }
+            k--;
+        }
+        while (k > 1 && l >= 0) {
+            l--;
+            k--;
+        }
+        while (k > 1 && r < arr.length) {
+            r++;
+            k--;
+        }
+        for (int i = l + 1; i <= r - 1; i++) {
+            res.add(arr[i]);
+        }
+        return res;
+    }
+    private int closet(int[] arr, int x) {
+        int s = 0;
+        int e = arr.length - 1;
+        while (s + 1 < e) {
+            int i = s + (e - s) / 2;
+            if (arr[i] <= x) {
+                s = i;
+            } else {
+                e = i;
+            }
+        }
+        if (Math.abs(arr[s] - x) <= Math.abs(arr[e] - x)) {
+            return s;
+        }
+        return e;
+    }
+}
+
+// 我写的二分是垃圾 太鸡儿垃圾
 class Solution {
     public List<Integer> findClosestElements(int[] arr, int k, int x) {
         int index = smallerThan(arr, x);
