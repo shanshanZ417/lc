@@ -1,0 +1,43 @@
+// dfs + memo + bit manipulation + 等差数列求和
+class Solution {
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        int sum = (1+maxChoosableInteger)*maxChoosableInteger/2;
+        if(sum < desiredTotal) return false;
+        if(desiredTotal <= 0) return true;
+        boolean[] visited = new boolean[maxChoosableInteger + 1];
+        Map<Integer, Boolean> memo = new HashMap<>();
+        return helper(visited, maxChoosableInteger, desiredTotal, memo);
+    }
+    private boolean helper(boolean[] visited, int n, int rest, Map<Integer, Boolean> memo) {
+        // base case
+        if (rest <= 0) {
+            return false;
+        }
+        int key = format(visited);
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        for (int i = 1; i <= n; i++) {
+            if (visited[i]) {
+                continue;
+            }
+            visited[i] = true;
+            if (!helper(visited, n, rest - i, memo)) {
+                memo.put(key, true);
+                visited[i] = false;
+                return true;
+            }
+            visited[i] = false;
+        }
+        memo.put(key, false);
+        return false;
+    }
+    public int format(boolean[] used){
+        int num = 0;
+        for(boolean b: used){
+            num <<= 1;
+            if(b) num |= 1;
+        }
+        return num;
+    }
+}
