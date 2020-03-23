@@ -1,3 +1,32 @@
+// 九章dp
+/*
+最后状态: 最后硬币 cointK
+子问题：最少多少硬币拼出 amount - cointK
+
+transition function:
+f(x) = min{f(x - coin1) + 1, f(x - coin2) + 1, ... , f(x - coinN) + 1};
+
+初始条件
+f(0) = 0;
+拼不出 Integer.MAX_VALUE;
+*/
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] minCoin = new int[amount + 1];
+        minCoin[0] = 0;
+        for (int i = 1; i < amount + 1; i++) {
+            minCoin[i] = Integer.MAX_VALUE;
+            for (int coin : coins) {
+                if (coin > i || minCoin[i - coin] == Integer.MAX_VALUE) {
+                    continue;
+                }
+                minCoin[i] = Math.min(minCoin[i], minCoin[i - coin] + 1);
+            }
+        }
+        return minCoin[amount] == Integer.MAX_VALUE ? -1 : minCoin[amount];
+    }
+}
+
 // dp 【我日 dp转换成dfs+memorilization我根本他妈的搞不懂】
 class Solution {
     public int coinChange(int[] coins, int amount) {
