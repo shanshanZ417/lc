@@ -1,0 +1,29 @@
+/*
+final state&sub questions
+paint last house
+the minimum cost of paining n - 1 house
+
+transition 
+f[i] = Math.min(costs[i][j != last color] + f[i - 1]);
+
+initial state & corner case
+paint first house 
+所有color
+
+
+ordering 
+*/
+class Solution {
+    public int minCost(int[][] costs) {
+        int num = costs.length;
+        int[] red = new int[num + 1];
+        int[] blue = new int[num + 1];
+        int[] green = new int[num + 1];
+        for (int i = 0; i < num; i++) {
+            red[i + 1] = Math.min(blue[i] + costs[i][0], green[i] + costs[i][0]);
+            blue[i + 1] = Math.min(red[i] + costs[i][1], green[i] + costs[i][1]);
+            green[i + 1] = Math.min(red[i] + costs[i][2], blue[i] + costs[i][2]);
+        }
+        return Math.min(red[num], Math.min(blue[num], green[num]));
+    }
+}
