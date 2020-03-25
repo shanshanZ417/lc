@@ -1,0 +1,51 @@
+/*
+dp[i][j] i->house j->color
+dp[i][j] = Math.min(dp[i][j], costs[i][j] + dp[i - 1][z](z!=j) j = 0...k - 1)
+
+[1,5,3] 1  5  3
+[2,9,4] 5
+
+*/
+
+class Solution {
+    public int minCostII(int[][] costs) {
+        if (costs == null || costs.length == 0 || costs[0].length == 0) {
+            return 0;
+        }
+        int n = costs.length;
+        int k = costs[0].length;
+        int minValue = 0;
+        int minValueIndex = 0;
+        int secondMinValue = 0;
+        int[][] paint = new int[n + 1][k];
+        for (int i = 1; i < n + 1; i++) {
+            minValue = -1;
+            minValueIndex = 0;
+            secondMinValue = -1;
+            for (int j = 0; j < k; j++) {
+                if (minValue == -1 || paint[i - 1][j] < minValue) {
+                    secondMinValue = minValue;
+                    minValue = paint[i - 1][j];
+                    minValueIndex = j;
+                } else if (secondMinValue == -1 || paint[i - 1][j] < secondMinValue){
+                   secondMinValue = paint[i - 1][j];
+                }
+            }
+            
+            for (int j = 0; j < k; j++) {
+                // first house
+                paint[i][j] = Integer.MAX_VALUE;
+                if (i == 1) {
+                    paint[i][j] = costs[i - 1][j];
+                } else {
+                    paint[i][j] = Math.min(paint[i][j], costs[i - 1][j] + (j == minValueIndex ? secondMinValue : minValue));
+                }
+            }
+        }
+        int res = Integer.MAX_VALUE;
+        for (int j = 0; j < k; j++) {
+            res = Math.min(res, paint[n][j]);
+        }
+        return res;
+    }
+}
