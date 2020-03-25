@@ -1,0 +1,43 @@
+/*
+[3,3,5,0,0,3,1,4]
+last step 
+
+k : transaction
+i : day
+in this case k = 2;
+f[k, i] = Math.max(f[k, i - 1], price[i] - price[j] + f[k - 1, j - 1](where j >= 0 && j < i)); 
+
+initial case
+f[0][0] = 0;
+f[1][0] = 0;
+
+
+1 2 3 4 5
+  i
+
+profit[0] 0 1
+profit[1] 0 
+
+
+*/
+// 还是不懂
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length == 0) {
+            return 0;
+        }
+        int n = prices.length;
+        // int k = 2;
+        int[][] profit = new int[3][n];
+        for (int k = 1; k < 3; k++) {
+            for (int i = 1; i < n; i++) {
+                int min = prices[0];
+                for (int j = 1; j <= i; j++) {
+                    min = Math.min(prices[j] - profit[k - 1][j - 1], min); 
+                }
+                profit[k][i] = Math.max(profit[k][i - 1], prices[i] - min);
+            }
+        }
+        return profit[2][n - 1];
+    }
+}
