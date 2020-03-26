@@ -1,0 +1,48 @@
+// dp
+class Solution {
+    public boolean stoneGame(int[] piles) {
+        int n = piles.length;
+        int sum = 0;
+        for (int i : piles) {
+            sum += i;
+        }
+        int[][] dp = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            dp[i][i] = piles[i];
+        } 
+        for (int i = 0; i < n ; i++) {
+            for (int j = i + 1; j < n; j++) {
+                int takeFirst = piles[i] + dp[i + 1][j];
+                int takeLast = piles[j] + dp[i][j - 1]; 
+                dp[i][j] = Math.max(takeFirst, takeLast);
+            }
+        }
+        return dp[0][n - 1] * 2 > sum;
+    }
+}
+// recursion + memo
+class Solution {
+    public boolean stoneGame(int[] piles) {
+        int sum = 0;
+        for (int i : piles) {
+            sum += i;
+        }
+        int n = piles.length;
+        int[][] memo = new int[n][n];
+        int alice = mostStone(0, piles.length - 1, piles, sum, memo);
+        return alice > sum - alice;
+        
+    }
+    private int mostStone(int s, int e, int[] piles, int total, int[][] memo) {
+        if (s == e) {
+            return piles[s];
+        }
+        if (memo[s][e] != 0) {
+            return memo[s][e];
+        }
+        int takeOne = piles[s] + total - mostStone(s + 1, e, piles, total - piles[s], memo);
+        int takeLast = piles[e] + total - mostStone(s, e - 1, piles, total - piles[e], memo);
+        memo[s][e] = Math.max(takeOne, takeLast);
+        return memo[s][e];
+    }
+}
