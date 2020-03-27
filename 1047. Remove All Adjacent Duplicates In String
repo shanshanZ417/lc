@@ -1,0 +1,49 @@
+/*
+abbaca
+     i
+ca
+"a"
+*/
+class Solution {
+    public String removeDuplicates(String S) {
+        Deque<Character> stack = new LinkedList<>();
+        int index = 0;
+        for (char c : S.toCharArray()) {
+            if (stack.isEmpty() || c != stack.peekLast()) {
+                 stack.offerLast(c);
+            } else {
+                stack.pollLast();
+            }
+        } 
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.append(stack.pollFirst());
+        }
+        return sb.toString();
+    }
+}
+
+// for candy crush
+class Solution {
+    public String removeDuplicates(String S) {
+        Deque<Character> stack = new LinkedList<>();
+        int index = 0;
+        char[] a = S.toCharArray();
+        while (index < S.length()) {
+            if (stack.isEmpty() || a[index] != stack.peekLast()) {
+                stack.offerLast(a[index]);
+                index++;
+            } else {
+                while (index < S.length() && a[index] == stack.peekLast()) {
+                    index++;
+                }
+                stack.pollLast();
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb.insert(0, stack.pollLast());
+        }
+        return sb.toString();
+    }
+}
