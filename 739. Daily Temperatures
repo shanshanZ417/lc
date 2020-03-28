@@ -1,0 +1,14 @@
+class Solution {
+    public int[] dailyTemperatures(int[] T) {
+        Deque<Integer> stack = new LinkedList<>();
+        int[] res = new int[T.length];
+        for (int i = T.length - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && T[i] >= T[stack.peekLast()]) {
+                stack.pollLast();
+            }
+            res[i] = stack.isEmpty() ? 0 : stack.peekLast() - i;
+            stack.offerLast(i);
+        }
+        return res;
+    }
+}
