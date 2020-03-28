@@ -1,3 +1,47 @@
+// dfs
+class Solution {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        //build map
+        Map<String, List<String>> map = new HashMap<>();
+        for (List<String> t : tickets) {
+            if (!map.containsKey(t.get(0))) {
+                map.put(t.get(0), new ArrayList<>());
+            }
+            map.get(t.get(0)).add(t.get(1));
+        }
+        for (List<String> val : map.values()) {
+            Collections.sort(val);
+        }
+        List<String> cur = new ArrayList<>();
+        helper(cur, map, "JFK", tickets.size() + 1);
+        return cur;
+    }
+    private boolean helper(List<String> cur, Map<String, List<String>> map, String curStop, int total) {
+        // when to stop
+        if (cur.size() == total - 1) {
+            cur.add(curStop);
+            return true;
+        }
+        List<String> candidate = map.get(curStop);
+        if (candidate == null) {
+            return false;
+        }
+        // 不能用for loop那么会有concurrency的问题
+        for (int i = 0; i < candidate.size(); i++) {
+            String next = candidate.get(i);
+            cur.add(curStop);
+            candidate.remove(i);
+            if (helper(cur, map, next, total)) {
+                return true;
+            }
+            candidate.add(i, next);
+            cur.remove(cur.size() - 1);
+        }
+        return false;
+    }
+}
+
+// dfs 高级版本
 class Solution {
     public List<String> findItinerary(List<List<String>> tickets) {
         //build map
