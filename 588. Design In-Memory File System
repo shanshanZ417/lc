@@ -1,0 +1,81 @@
+class FileSystem {
+    Trie trie;
+    public FileSystem() {
+        trie = new Trie();
+    }
+    
+    public List<String> ls(String path) {
+        return trie.getAllFile(path);
+    }
+    
+    public void mkdir(String path) {
+        trie.find(path);
+    }
+    
+    public void addContentToFile(String filePath, String content) {
+        trie.addFile(filePath, content);
+    }
+    
+    public String readContentFromFile(String filePath) {
+        return trie.getFileContent(filePath);
+    }
+}
+class FileNode{
+    TreeMap<String, FileNode> child;
+    Boolean isFile;
+    String name;
+    StringBuilder content;
+    public FileNode (String name){
+        this.name = name;
+        child = new TreeMap<>();
+        isFile = false;
+        content = new StringBuilder();
+    }
+}
+class Trie {
+    FileNode root;
+    public Trie() {
+        root = new FileNode("");
+    }
+    public FileNode find(String path) {
+        FileNode node = root;
+        for (String p : path.split("/")) {
+            if (p.length() == 0) {
+                continue;
+            }
+            if (!node.child.containsKey(p)) {
+                node.child.put(p, new FileNode(p));
+            }
+            node = node.child.get(p);
+        }
+        return node;
+    }
+    public List<String> getAllFile(String path) {
+        List<String> res = new ArrayList<>();
+        FileNode node = find(path);
+        if (node.isFile) {
+            res.add(node.name);
+        } else {
+            res.addAll(node.child.keySet());
+        }
+        return res;
+    } 
+    public void addFile(String filePath, String content) {
+        FileNode node = find(filePath);
+        node.isFile = true;
+        node.content.append(content);
+    }
+    public String getFileContent(String filePath) {
+        FileNode node = find(filePath);
+        return node.content.toString();
+    }
+}
+
+/**
+ * Your FileSystem object will be instantiated and called as such:
+ * FileSystem obj = new FileSystem();
+ * List<String> param_1 = obj.ls(path);
+ * obj.mkdir(path);
+ * obj.addContentToFile(filePath,content);
+ * String param_4 = obj.readContentFromFile(filePath);
+ */
