@@ -1,0 +1,62 @@
+// I 从root到child存在问题
+class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return false;
+        }
+        if (root.left == null && root.right == null) {
+            return root.val == sum;
+        }
+        return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    }
+}
+
+// II 从root到child所有路径
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<>();
+        helper(root, sum, new ArrayList<>(), res);
+        return res;
+    }
+    private void helper(TreeNode node, int sum, List<Integer> cur, List<List<Integer>> res){
+        if (node == null) {
+            return;
+        }
+        if (node.left == null && node.right == null) {
+            if (sum == node.val) {
+                cur.add(node.val);
+                res.add(new ArrayList<>(cur));
+                cur.remove(cur.size() - 1);
+            }
+            return;
+        }
+        cur.add(node.val);
+        helper(node.left, sum - node.val, cur, res);
+        helper(node.right, sum - node.val, cur, res);
+        cur.remove(cur.size() - 1);
+    }
+}
+
+// III 任意点到任意点，但是只能从上到下
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        Map<Integer, Integer> presum = new HashMap<>();
+        presum.put(0, 1);
+        return helper(root, presum, sum, 0);
+    }
+    private int helper(TreeNode node, Map<Integer, Integer> presum, int sum, int curSum) {
+        if (node == null) {
+            return 0;
+        }
+        int count = 0;
+        curSum += node.val;
+        if (presum.containsKey(curSum - sum)) {
+            count += presum.get(curSum - sum);
+        }
+        presum.put(curSum, presum.getOrDefault(curSum, 0) + 1);
+        int left = helper(node.left, presum, sum, curSum);
+        int right = helper(node.right, presum, sum, curSum);
+        presum.put(curSum, presum.get(curSum) - 1);
+        return left + right + count;
+    }
+}
