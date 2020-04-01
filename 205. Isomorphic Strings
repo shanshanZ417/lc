@@ -1,0 +1,28 @@
+ class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        if (s == null && t == null) {
+            return true;
+        }
+        if (s == null || t == null || s.length() != t.length()) {
+            return false;
+        }
+        Map<Integer, Integer> map = new HashMap<>();
+        int index = 0;
+        while (index < s.length()) {
+            int c1 = s.charAt(index);
+            int c2 = t.charAt(index);
+            if (map.containsKey(c1)) {
+                if (map.get(c1) != c2) {
+                    return false;
+                }
+            } else {
+                if (map.containsValue(c2)) {
+                    return false;
+                }
+                map.put(c1, c2);
+            }
+            index++;
+        }
+        return true;
+    }
+}
