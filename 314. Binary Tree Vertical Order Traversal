@@ -1,0 +1,36 @@
+class Solution {
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        Queue<TreeNode> nodes = new LinkedList<>();
+        Queue<Integer> cols = new LinkedList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        nodes.offer(root);
+        cols.offer(0);
+        int left = 0;
+        int right = 0;
+        while (!nodes.isEmpty()) {
+            TreeNode node = nodes.poll();
+            int col = cols.poll();
+            List<Integer> l = map.getOrDefault(col, new ArrayList<>());
+            l.add(node.val);
+            map.put(col, l);
+            if (node.left != null) {
+                nodes.offer(node.left);
+                cols.offer(col - 1);
+                left = Math.min(left, col - 1);
+            }
+            if (node.right != null) {
+                nodes.offer(node.right);
+                cols.offer(col + 1);
+                right = Math.max(right, col + 1);
+            }
+        }
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = left; i <= right; i++) {
+            res.add(map.get(i));
+        }
+        return res;
+    }
+}
