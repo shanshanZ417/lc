@@ -1,0 +1,65 @@
+// greedy就好
+class Solution {
+    public String intToRoman(int num) {
+        int[] values = {1000,900,500,400,100,90,50,40,10,9,5,4,1};
+        String[] strs = {"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strs.length; i++) {
+            while (num >= values[i]) {
+                num -= values[i];
+                sb.append(strs[i]);
+            }
+        }
+        return sb.toString();
+    }
+}
+
+// 二分 太复杂
+class Solution {
+    public String intToRoman(int num) {
+        Map<Integer, String> map = buildMap();
+        int[] array = {1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000};
+        StringBuilder sb = new StringBuilder();
+        while (num > 0) {
+            int x = findLargest(num, array);
+            sb.append(map.get(x));
+            num -= x;
+        }
+        return sb.toString();
+    }
+    private int findLargest(int num, int[] array) {
+        int s = 0;
+        int e = array.length - 1;
+        while (s + 1 < e) {
+            int mid = (e - s) / 2 + s;
+            if (array[mid] == num) {
+                return num;
+            } else if (array[mid] > num) {
+                e = mid - 1;
+            } else {
+                s = mid;
+            }
+        }
+        if (array[e] <= num) {
+            return array[e];
+        }
+        return array[s];
+    }
+    private Map<Integer, String> buildMap() {
+        Map<Integer, String> map = new HashMap<>();
+        map.put(1, "I");
+        map.put(4, "IV");
+        map.put(5, "V");
+        map.put(9, "IX");
+        map.put(10, "X");
+        map.put(40, "XL");
+        map.put(50, "L");
+        map.put(90, "XC");
+        map.put(100, "C");
+        map.put(400, "CD");
+        map.put(500, "D");
+        map.put(900, "CM");
+        map.put(1000, "M");
+        return map;
+    }
+}
