@@ -1,0 +1,21 @@
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        int len = nums.length;
+        int[] res = new int[len];
+        Deque<Integer> stack = new LinkedList<>();
+        for (int i = (len - 1) * 2; i >= 0; i--) {
+            //int num = nums[i % len]; 
+            int n = i % len;
+            while (!stack.isEmpty() && stack.peekLast() <= nums[n]) {
+                stack.pollLast();
+            }
+            if (stack.isEmpty()) {
+                res[n] = -1;
+            } else {
+                res[n] = stack.peekLast();
+            }
+            stack.offerLast(nums[n]);
+        }
+        return res;
+    }
+}
