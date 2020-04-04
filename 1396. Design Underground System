@@ -14,19 +14,30 @@ class UndergroundSystem {
     }
     
     public void checkIn(int id, String stationName, int t) {
-        checkinMap.put(id, new Pair(stationName, t));
+        checkinMap.put(id, new Pair<>(stationName, t));
     }
     
     public void checkOut(int id, String stationName, int t) {
         int tripTime = t - checkinMap.get(id).getValue();
         String str = checkinMap.get(id).getKey() + stationName;
         double[] times = map.getOrDefault(str, new double[]{0.0, 0.0});
-        times[1] = (times[1] * times[0] + tripTime) / (times[0] + 1);
         times[0]++;
+        times[1] += tripTime;
+        // times[1] = (times[1] * times[0] + tripTime) / (times[0] + 1);
+        // times[0]++;
         map.put(str, times);
     }
     
     public double getAverageTime(String startStation, String endStation) {
-        return map.get(startStation + endStation)[1];
+        double[] time = map.get(startStation + endStation);
+        return time[1] / time[0];
     }
 }
+
+/**
+ * Your UndergroundSystem object will be instantiated and called as such:
+ * UndergroundSystem obj = new UndergroundSystem();
+ * obj.checkIn(id,stationName,t);
+ * obj.checkOut(id,stationName,t);
+ * double param_3 = obj.getAverageTime(startStation,endStation);
+ */
