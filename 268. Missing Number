@@ -1,3 +1,15 @@
+// sol 3: bit manipulation XOR(相等的消失 == 0) 
+class Solution {
+    public int missingNumber(int[] nums) {
+        int missing = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            missing ^= i;
+            missing ^= nums[i];
+        }
+        return missing;
+    }
+}
+
 // sol 2: 高斯求和公式
 class Solution {
     public int missingNumber(int[] nums) {
