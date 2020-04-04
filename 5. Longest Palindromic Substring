@@ -3,6 +3,32 @@ brute force
 "babad"
    i
  j
+// 这个brute force的竟然更快 什么玩意儿
+class Solution {
+    int[] res = new int[]{0, 0};
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() < 2) {
+            return s;
+        }
+        for (int i = 0; i < s.length() - 1; i++) {
+            findLongest(i, i, s);
+            findLongest(i, i + 1, s);
+        }
+        return s.substring(res[0], res[1] + 1);
+    }
+    private void findLongest(int s, int e, String str) {
+        while (s >= 0 && e <= str.length() - 1 && str.charAt(s) == str.charAt(e)) {
+            s--;
+            e++;
+        }
+        if (e - s - 2 > res[1] - res[0]) {
+            res[0] = s + 1;
+            res[1] = e - 1;
+        }
+        
+    }
+}
+
 
 dp
 */
