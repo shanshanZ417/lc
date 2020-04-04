@@ -1,0 +1,32 @@
+/*
+Leyton 3(45) 10(27) 24(10)
+Paradise 8(32)
+Waterloo 15(45), 20(27) 38(10)
+Cambridge 22(32)
+*/
+class UndergroundSystem {
+    Map<String, double[]> map;
+    Map<Integer, Pair<String, Integer>> checkinMap;
+
+    public UndergroundSystem() {
+        map = new HashMap<>();
+        checkinMap = new HashMap<>();
+    }
+    
+    public void checkIn(int id, String stationName, int t) {
+        checkinMap.put(id, new Pair(stationName, t));
+    }
+    
+    public void checkOut(int id, String stationName, int t) {
+        int tripTime = t - checkinMap.get(id).getValue();
+        String str = checkinMap.get(id).getKey() + stationName;
+        double[] times = map.getOrDefault(str, new double[]{0.0, 0.0});
+        times[1] = (times[1] * times[0] + tripTime) / (times[0] + 1);
+        times[0]++;
+        map.put(str, times);
+    }
+    
+    public double getAverageTime(String startStation, String endStation) {
+        return map.get(startStation + endStation)[1];
+    }
+}
