@@ -1,3 +1,33 @@
+// one pass 🐂🍺
+class Solution {
+    public int trap(int[] height) {
+        int s = 0;
+        int e = height.length - 1;
+        int left = 0;
+        int right = 0;
+        int res = 0;
+        while (s <= e) {
+            if (height[s] <= height[e]) {
+               if (height[s] > left) {
+                    left = height[s];
+                } else {
+                    res += left - height[s];
+                }
+                s++;
+            } else {
+                if (height[e] > right) {
+                    right = height[e];
+                } else {
+                    res += right - height[e];
+                }
+                e--;
+            }
+        }
+        return res;
+    }
+}
+
+// 3 pass
 class Solution {
     public int trap(int[] height) {
         int n = height.length;
