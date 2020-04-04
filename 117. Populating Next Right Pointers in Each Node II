@@ -1,0 +1,60 @@
+// iterative
+class Solution {
+    public Node connect(Node root) {
+        Node cur = root;
+        Node start = null;
+        Node prev = null;
+        while (cur != null) {
+            while (cur != null) {
+                if (cur.left != null) {
+                   if (prev != null) {
+                       prev.next = cur.left;
+                   } else {
+                       start = cur.left;
+                   }
+                   prev = cur.left;
+               }
+                if (cur.right != null) {
+                    if (prev != null) {
+                        prev.next = cur.right;
+                    } else {
+                        start = cur.right;
+                    }
+                    prev = cur.right;
+                }
+                cur = cur.next;
+            }
+            cur = start;
+            start = null;
+            prev = null;
+        }
+        return root;
+    }
+}
+
+// bfs
+class Solution {
+    public Node connect(Node root) {
+        if (root == null) {
+            return root;
+        }
+        Deque<Node> queue = new LinkedList<>();
+        queue.offerLast(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                Node cur = queue.pollFirst();
+                if (i < size - 1) {
+                    cur.next = queue.peekFirst();
+                }
+                if (cur.left != null) {
+                    queue.offerLast(cur.left);
+                }
+                if (cur.right != null) {
+                    queue.offerLast(cur.right);
+                }
+            }
+        }
+        return root;
+    }
+}
