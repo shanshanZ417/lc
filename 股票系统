@@ -1,0 +1,78 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {
+  public static void main(String[] args) {
+    StockSystem system = new StockSystem();
+    system.addStock("MSFT", 200);
+    system.addStock("APP", 400);
+    system.addStock("AMZN", 550);
+    for (String s : system.getTopStock(2)) {
+      System.out.println(s);
+    }
+    system.addStock("SPT", 100);
+    system.updateStock("MSFT", 300);
+    system.updateStock("MSFT", 50);
+    System.out.println(" ");
+    for (String s : system.getTopStock(3)) {
+      System.out.println(s);
+    }
+    
+    
+  }
+}
+class StockSystem {
+  TreeMap<Integer, Set<String>> map;
+  Map<String, Integer> stock;
+  public StockSystem(){
+    map = new TreeMap<>();
+    stock = new HashMap<>();
+  }
+  public void addStock(String name, int price) {
+    stock.put(name, price);
+    Set<String> companies = map.getOrDefault(price, new HashSet<>());
+    companies.add(name);
+    map.put(price, companies);
+  }
+  
+  public void removeStock(String name) {
+    int price = stock.get(name);
+    stock.remove(name);
+    map.get(price).remove(name);
+    if (map.get(price).size() == 0) {
+      map.remove(price);
+    }
+  }
+  
+  public void updateStock(String name, int addprice) {
+    int oldprice = stock.get(name);
+    int currentpirce = oldprice + addprice;
+    removeStock(name);
+    addStock(name, currentpirce);
+  }
+  
+  public List<String> getTopStock(int k) {
+    List<String> res = new ArrayList<>();
+    Iterator<Integer> iterator = map.descendingKeySet().iterator();
+    while (k > 0 && iterator.hasNext()) {
+      List<String> list = new ArrayList<>(map.get(iterator.next()));
+      if (list.size() <= k) {
+        res.addAll(list);
+        k -= list.size();
+      } else {
+        for (int i = 0; i < k; i++) {
+          res.add(list.get(i));
+        }
+        k = 0;
+      }
+    }
+    return res;
+  }
+}
