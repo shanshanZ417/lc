@@ -1,3 +1,30 @@
+// 我能想到的解法
+public class Solution {
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        TreeNode succesor = null;
+        while (root != null && root.val != p.val) {
+            if (root.val > p.val) {
+                succesor = root;
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+        if (root == null) {
+            return null;
+        }
+        if (root.right == null) {
+            return succesor;
+        }
+        TreeNode next = root.right;
+        while (next.left != null) {
+            next = next.left;
+        }
+        return next;
+    }
+}
+
+
 // iterative 树上的二分查找
 class Solution {
     public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
