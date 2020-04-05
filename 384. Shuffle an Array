@@ -1,3 +1,43 @@
+// sol1: 我觉得这个比较intuitive
+class Solution {
+    public int[] nums;
+    Random rand;
+    public Solution(int[] nums) {
+        this.nums = nums;
+        rand = new Random();
+    }
+    
+    /** Resets the array to its original configuration and return it. */
+    public int[] reset() {
+        return nums;
+    }
+    
+    /** Returns a random shuffling of the array. */
+    public int[] shuffle() {
+        int[] copy = nums.clone();
+        int n = copy.length;
+        for (int i = copy.length - 1; i >= 0; i--) {
+            int index = rand.nextInt(i + 1);
+            swap(i, index, copy);
+        }
+        return copy;
+    }
+    
+    private void swap(int i, int j, int[] copy) {
+        int tmp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = tmp;
+    }
+}
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution obj = new Solution(nums);
+ * int[] param_1 = obj.reset();
+ * int[] param_2 = obj.shuffle();
+ */
+ 
+ // sol2
 class Solution {
     public int[] nums;
     Random rand;
