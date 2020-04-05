@@ -1,0 +1,55 @@
+/*
+输入：给一个字典如 a, b, c, d, ch, dd, e, r ..., 一个word list 如 ddr, dea, ab, chc
+重点是字典里的"字母"可能是长度为2的
+输出：sorted word list： ab, dea, chc, ddr
+解法：自己设计输入的数据结构。字典可以为<string, int> map。把word拆成int tuple，然后sort tuple。不难，一开始很容易想复杂了。
+
+*/
+class Solution {
+  public static void main(String[] args) {
+    List<String> dict = Arrays.asList(new String[]{"a", "b", "c", "d", "ch", "dd", "e", "r"});
+    List<String> words = Arrays.asList(new String[]{"ddr", "dea", "ab", "chc"});
+    for (String s : findOrder(dict, words)) {
+      System.out.println(s);
+    }
+    
+  }
+  private static List<String> findOrder(List<String> dict, List<String> words){
+    Map<String, Integer> map = new HashMap<>();
+    int index = 0;
+    for (String d : dict) {
+      map.put(d, index++);
+    }
+    Map<String, List<Integer>> mapping = new HashMap<>();
+    for (String w : words) {
+      List<Integer> cur = getMapping(w, map);
+      mapping.put(w, cur);
+    }
+    Collections.sort(words, new Comparator<String>(){
+      @Override
+      public int compare(String s1, String s2) {
+        List<Integer> l1 = mapping.get(s1);
+        List<Integer> l2 = mapping.get(s2);
+        for (int i = 0; i < Math.min(l1.size(), l2.size()); i++) {
+          if (l1.get(i) != l2.get(i)) {
+            return l1.get(i) - l2.get(i);
+          }
+        }
+        return l1.size() - l2.size();
+      }
+    });
+    return words;
+  }
+  private static List<Integer> getMapping(String word, Map<String, Integer> map) {
+    List<Integer> res = new ArrayList<>();
+    for (int i = 0; i < word.length(); i++) {
+      if (i < word.length() - 1 && map.containsKey(word.substring(i, i + 2))) {
+        res.add(map.get(word.substring(i, i + 2)));
+        i++;
+      } else {
+        res.add(map.get(word.substring(i, i + 1)));
+      }
+    }
+    return res;
+  }
+}
