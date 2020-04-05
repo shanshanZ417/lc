@@ -1,4 +1,104 @@
-// sliding window 
+和567. Permutation in String基本属于一道题
+// sol 3: 更骚的版本，直接计数count
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        if (s == null || p == null || s.length() < p.length()) {
+            return new ArrayList<>();
+        }
+        int[] map = new int[26];
+        for (char c : p.toCharArray()) {
+            map[c - 'a']++;
+        }
+        int[] window = new int[26];
+        char[] c = s.toCharArray();
+        for (int i = 0; i < p.length(); i++) {
+            window[c[i] - 'a']++;
+        }
+        int count = 0;
+        for (int i = 0; i < 26; i++) {
+            if (window[i] == map[i]) {
+                count++;
+            }
+        }
+        List<Integer> res = new ArrayList<>();
+        for (int i = p.length(); i < s.length(); i++) {
+            if (count == 26) {
+                res.add(i - p.length());
+            }
+            window[c[i] - 'a']++;
+            if (window[c[i] - 'a'] == map[c[i] - 'a']) {
+                count++;
+            } else if (window[c[i] - 'a'] == map[c[i] - 'a'] + 1) {
+                count--;
+            }
+            window[c[i - p.length()] - 'a']--;
+            if (window[c[i - p.length()] - 'a'] == map[c[i - p.length()] - 'a'] ) {
+                count++;
+            } else if (window[c[i - p.length()] - 'a'] == map[c[i - p.length()] - 'a'] - 1){
+                count--;
+            }
+        }
+        if (count == 26) {
+            res.add(s.length() - p.length());
+        }
+        return res;
+    }
+}
+
+
+// sol 2: fixed sliding window TLE -> 换成int[]就不tle
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : p.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        Map<Character, Integer> window = new HashMap<>();
+        char[] c = s.toCharArray();
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            window.put(c[i], window.getOrDefault(c[i], 0) + 1);
+            if (i >= p.length()) {
+                window.put(c[i - p.length()], window.get(c[i - p.length()]) - 1);
+            }
+            if (isEqual(map, window)) {
+                res.add(i - p.length() + 1);
+            }
+        }
+        return res;
+    }
+    private boolean isEqual(Map<Character, Integer> map, Map<Character, Integer> window) {
+        for (char c : map.keySet()) {
+            if (!window.containsKey(c) || window.get(c) != map.get(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        int[] map = new int[26];
+        for (char c : p.toCharArray()) {
+            map[c - 'a']++;
+        }
+        int[] window = new int[26];
+        char[] c = s.toCharArray();
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            window[c[i] - 'a']++;
+            if (i >= p.length()) {
+                window[c[i - p.length()] - 'a']--;
+            }
+            if (Arrays.equals(map, window)) {
+                res.add(i - p.length() + 1);
+            }
+        }
+        return res;
+    }
+}
+// sol 1: non-fixed sliding window 
 class Solution {
     public List<Integer> findAnagrams(String s, String p) {
         Map<Character, Integer> mapper = new HashMap<>();
