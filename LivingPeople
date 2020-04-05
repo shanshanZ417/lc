@@ -1,0 +1,28 @@
+//生于1908年、死于1909年的人应当被列入1908年和1909年的计数。 因为1909年他还活着。
+/* 出生年份标记1, 死亡年份下一年标记-1*/
+class Solution {
+    public int maxAliveYear(int[] birth, int[] death) {
+        Arrays.sort(birth);
+        Arrays.sort(death);
+        int n = birth.length;
+        int i = 0;
+        int j = 0;
+        int count = 0;
+        int max = 0;
+        int res = 0;
+        while (i < n && j < n) {
+            if (birth[i] <= death[j]) {
+                count++;
+                if (count > max) {
+                    max = count;
+                    res = i;
+                }
+                i++;
+            } else {
+                count--;
+                j++;
+            }
+        }
+        return birth[res];
+    }
+}
