@@ -1,0 +1,63 @@
+class Solution {
+    public int shortestBridge(int[][] A) {
+        int m = A.length;
+        int n = A[0].length;
+        Queue<Integer> queue = new LinkedList<>();
+        boolean found = false;
+        for (int i = 0; i < m; i++) {
+            if (found) {
+                break;
+            }
+            for (int j = 0; j < n; j++) {
+                if (A[i][j] == 1) {
+                    dfs(i, j, m, n, A, queue);
+                    found = true;
+                    break;
+                }
+            }
+        }
+        // System.out.println(queue.size());
+        int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        int distance = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            distance++;
+            for (int i = 0; i < size; i++) {
+                int cur = queue.poll();
+                int x = cur / n;
+                int y = cur % n;
+                for (int[] dir : dirs) {
+                    int newX = x + dir[0];
+                    int newY = y + dir[1];
+                    if (!isValid(newX, newY, m, n) || A[newX][newY] == 2) {
+                        continue;
+                    }
+                    if (A[newX][newY] == 1) {
+                        return distance - 1;
+                    }
+                    queue.offer(newX * n + newY);
+                    A[newX][newY] = 2;
+                }
+            }
+        }
+        return -1;
+    }
+    private boolean isValid(int x, int y, int m, int n) {
+        if (x < 0 || x >= m || y < 0 || y >= n) {
+            return false;
+        }
+        return true;
+    }
+    private void dfs(int x, int y, int m, int n, int[][] A, Queue<Integer> queue) {
+        if (!isValid(x, y, m, n) || A[x][y] != 1) {
+            return;
+        }
+        A[x][y] = 2;
+        queue.offer(x * n + y);
+        dfs(x + 1, y, m, n, A, queue);
+        dfs(x, y + 1, m, n, A, queue);
+        dfs(x - 1, y, m, n, A, queue);
+        dfs(x, y - 1, m, n, A, queue);
+        
+    }
+}
