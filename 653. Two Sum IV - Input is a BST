@@ -1,0 +1,47 @@
+// two pointer with Time O(n) Space O(log n) 
+class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        List<int[]> res = new ArrayList<>();
+        Deque<TreeNode> leftstack = new LinkedList<>();
+        Deque<TreeNode> rightstack = new LinkedList<>();
+        leftStack(root, leftstack);
+        rightStack(root, rightstack);
+        TreeNode left = leftstack.pollLast();
+        TreeNode right = rightstack.pollLast();
+        while (left != null && right != null && left != right) {
+            if (left.right != null) {
+                leftStack(left.right, leftstack);
+            }
+            if (right.left != null) {
+                rightStack(right.left, rightstack);
+            }
+            if (left.val + right.val == k) {
+                res.add(new int[]{left.val, right.val});
+                left = leftstack.pollLast();
+                right = rightstack.pollLast();
+            } else if (left.val + right.val < k){
+                left = leftstack.pollLast();
+            } else {
+                right = rightstack.pollLast();
+            }
+        }
+        for (int[] r : res) {
+            System.out.println(r[0] + " " + r[1]);
+        }
+        return res.size() != 0;
+    }
+    private void leftStack(TreeNode root, Deque<TreeNode> leftstack) {
+        while (root != null) {
+            leftstack.offerLast(root);
+            root = root.left;
+        }
+    }
+    private void rightStack(TreeNode root, Deque<TreeNode> rightstack) {
+        while (root != null) {
+            rightstack.offerLast(root);
+            root = root.right;
+        }
+    }
+}
+
+// binary search with Time O(nlogn) Space O(log n) 
