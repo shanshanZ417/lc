@@ -21,6 +21,32 @@ class Solution {
     }
 }
 
+// iterative 
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        Deque<TreeNode> stack = new LinkedList<>();
+        while (root != null) {
+            stack.offerLast(root);
+            root = root.left;
+        }
+        while (k > 0 && !stack.isEmpty()) {
+            TreeNode cur = stack.pollLast();
+            k--;
+            if (k == 0) {
+                return cur.val;
+            }
+            if (cur.right != null) {
+                TreeNode right = cur.right;
+                while (right != null) {
+                    stack.offerLast(right);
+                    right = right.left;
+                }
+            }
+        }
+        return -1;
+    }
+}
+
 // inorder traversal, not optimal
 class Solution {
     public int kthSmallest(TreeNode root, int k) {
