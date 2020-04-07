@@ -1,4 +1,4 @@
-// binary search
+//sol3 binary search
 class Solution {
     public int kthSmallest(TreeNode root, int k) {
         if (root == null) {
@@ -38,7 +38,7 @@ class Solution {
     }
 }
 
-// inorder traversal改进
+// sol2: inorder traversal改进
 class Solution {
     int count;
     int num = 0;
@@ -58,5 +58,32 @@ class Solution {
             return;
         }
         inorder(root.right);
+    }
+}
+
+// sol1: recursion
+class Solution {
+    int res = -1;
+    int count = 0;
+    public int kthSmallest(TreeNode root, int k) {
+        if (root == null) {
+            return 0;
+        }
+        count = k;
+        helper(root);
+        return res;
+    }
+    private void helper(TreeNode node) {
+        if (node.left != null) {
+            helper(node.left);
+        }
+        count--;
+        if (count == 0) {
+            res = node.val;
+            return;
+        }
+        if (node.right != null) {
+            helper(node.right);
+        }
     }
 }
