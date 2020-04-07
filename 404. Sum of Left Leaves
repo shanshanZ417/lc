@@ -1,0 +1,58 @@
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        if (root == null) {
+            return new ArrayList<>();
+        }
+        Deque<TreeNode> queue = new LinkedList<>();
+        queue.offerLast(root);
+        List<List<Integer>> res = new ArrayList<>();
+        boolean flag = true;
+        while (!queue.isEmpty()) {
+            int s = queue.size();
+            List<Integer> cur = new ArrayList<>();
+            for (int i = 0; i < s; i++) {
+                if (!flag) {
+                    TreeNode n = queue.pollLast();
+                    cur.add(n.val);
+                    if (n.right != null) {
+                        queue.offerFirst(n.right);
+                    }
+                    if (n.left != null) {
+                        queue.offerFirst(n.left);
+                    }  
+                } else {
+                    TreeNode n = queue.pollFirst();
+                    cur.add(n.val);
+                    if (n.left != null) {
+                        queue.offerLast(n.left);
+                    }
+                    if (n.right != null) {
+                        queue.offerLast(n.right);
+                    }  
+                }
+            }
+            flag = !flag;
+            res.add(cur);
+        }
+        return res;
+    }
+}
+
+
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int ans = 0;
+        if (root.left != null) {
+            if (root.left.left == null && root.left.right == null) {
+                ans += root.left.val;
+            } else {
+                ans += sumOfLeftLeaves(root.left);
+            }
+        }
+        ans += sumOfLeftLeaves(root.right);
+        return ans;
+    }
+}
