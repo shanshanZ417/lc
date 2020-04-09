@@ -1,35 +1,35 @@
 // heap 遇到median的问题，想到用minheap&maxheap去联合解决
 class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
-        double[] res = new double[nums.length - k + 1];
-        PriorityQueue<Integer> minheap = new PriorityQueue<>();
         PriorityQueue<Integer> maxheap = new PriorityQueue<>(Collections.reverseOrder());
+        PriorityQueue<Integer> minheap = new PriorityQueue<>();
+        double[] res = new double[nums.length - k + 1];
         int index = 0;
         for (int i = 0; i < nums.length; i++) {
-            addValue(minheap, maxheap, nums, i);
-            if (i >= k -1) {
-                res[index++] = findMedian(minheap, maxheap);
-                int prev = i - (k - 1);
-                if (maxheap.contains(nums[prev])) {
-                    maxheap.remove(nums[prev]);
+            addNumber(nums[i], maxheap, minheap);
+            if (i >= k - 1) {
+                double tmp = getMedian(maxheap, minheap);
+                res[index++]  = tmp;
+                if (nums[i - k + 1] <= tmp) {
+                    maxheap.remove(nums[i - k + 1]);
                 } else {
-                    minheap.remove(nums[prev]);
+                    minheap.remove(nums[i - k + 1]);
                 }
             }
         }
         return res;
     }
-    private double findMedian(PriorityQueue<Integer> minheap, PriorityQueue<Integer> maxheap) {
-        if (maxheap.size() > minheap.size()) {
-            return (double)maxheap.peek();
-        } 
-        return ((double)maxheap.peek() + (double)minheap.peek()) / 2.0;
-    }
-    private void addValue(PriorityQueue<Integer> minheap, PriorityQueue<Integer> maxheap, int[] nums, int i) {
-        maxheap.offer(nums[i]);
+    private void addNumber(int num, PriorityQueue<Integer> maxheap, PriorityQueue<Integer> minheap) {
+        maxheap.offer(num);
         minheap.offer(maxheap.poll());
         if (minheap.size() > maxheap.size()) {
             maxheap.offer(minheap.poll());
         }
+    }
+    private double getMedian(PriorityQueue<Integer> maxheap, PriorityQueue<Integer> minheap) {
+        if (maxheap.size() == minheap.size()) {
+            return ((double)maxheap.peek() +(double) minheap.peek()) / 2.0;
+        }
+        return (double)maxheap.peek();
     }
 }
