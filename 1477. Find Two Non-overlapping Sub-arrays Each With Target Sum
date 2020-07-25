@@ -1,0 +1,25 @@
+// sol1: presum 的巧妙运用，可以往前扫也可以往后
+class Solution {
+    public int minSumOfLengths(int[] arr, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        int total = 0;
+        for (int i = 0; i < arr.length; i++) {
+            total += arr[i];
+            map.put(total, i);
+        }
+        map.put(0, -1);
+        int left = Integer.MAX_VALUE;
+        total = 0;
+        int res = Integer.MAX_VALUE;
+        for (int i = 0; i < arr.length; i++) {
+            total += arr[i];
+            if (map.containsKey(total - target)) {
+                left = Math.min(left, i - map.get(total - target));
+            }
+            if (map.containsKey(total + target) && left != Integer.MAX_VALUE) {
+                res = Math.min(res, map.get(total + target) - i + left);
+            }
+        }
+        return res == Integer.MAX_VALUE ? -1 : res;
+    }
+}
