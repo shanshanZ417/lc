@@ -1,0 +1,52 @@
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        int start = 0;
+        int cur = 0;
+        int len = 0;
+        List<String> res = new ArrayList<>();
+        while (start < words.length) {
+            // count until it exceeds the maxWidth
+            while (cur < words.length && (len + words[cur].length() + (cur - start) <= maxWidth)) {
+                len += words[cur].length();
+                cur++;
+            }
+            int extraSpace = maxWidth - len;
+            int slot = cur - start - 1;
+            StringBuilder sb = new StringBuilder();
+            // three cases
+            // if only one word 
+            if (cur == words.length) {
+                for (int i = start; i < cur; i++) {
+                    sb.append(words[i]);
+                    sb.append(" ");
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                appendSpace(sb, extraSpace - slot);
+            } else if (cur - start == 1) {
+                sb.append(words[start]);
+                appendSpace(sb, extraSpace);
+            } else {
+                for (int i = start; i < cur; i++) {
+                    if (slot != 0) {
+                        int space = extraSpace / slot + (extraSpace % slot == 0 ? 0 : 1);
+                        sb.append(words[i]);
+                        appendSpace(sb, space);
+                        extraSpace -= space;
+                        slot--;
+                    } else {
+                        sb.append(words[i]);
+                    }
+                }
+            }
+            res.add(sb.toString());
+            start = cur;
+            len = 0;
+        }
+        return res;
+    }
+    private void appendSpace(StringBuilder sb, int space) {
+        for (int i = 0; i < space; i++) {
+            sb.append(" ");
+        }
+    }
+}
