@@ -1,0 +1,21 @@
+class Solution {
+    public int getMoneyAmount(int n) {
+        int[][] log = new int[n + 1][n + 1];
+        return helper(0, n, log);
+    }
+    private int helper(int s, int e, int[][] log) {
+        if (s >= e) {
+            return 0;
+        }
+        if (log[s][e] != 0) {
+            return log[s][e];
+        }
+        int res = Integer.MAX_VALUE;
+        for (int i = s; i <= e; i++) {
+            int cur = i + Math.max(helper(s, i - 1, log), helper(i + 1, e, log));
+            res = Math.min(res, cur);
+        }
+        log[s][e] = res;
+        return res;
+    }
+}
