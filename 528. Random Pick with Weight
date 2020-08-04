@@ -1,0 +1,56 @@
+class Solution {
+    Random rand;
+    int[] w;
+    public Solution(int[] w) {
+        for (int i = 0; i < w.length; i++) {
+            w[i] += i == 0 ? 0 : w[i - 1];
+        }
+        this.w = w;
+        rand = new Random();
+    }
+    
+    public int pickIndex() {
+        int random = rand.nextInt(w[w.length - 1]) + 1;
+        int s = 0;
+        int e = w.length - 1;
+        while (s < e) {
+            int mid = (e - s) / 2 + s;
+            if (w[mid] == random) {
+                return mid;
+            } else if (w[mid] < random) {
+                s = mid + 1;
+            } else {
+                e = mid;
+            }
+        } 
+        return s;
+    }
+}
+
+
+
+// sol2: 慢点也能做， 记住rand.nextInt(n) return的是[0, n)
+class Solution {
+    int size;
+    Random rand;
+    int[] w;
+    public Solution(int[] w) {
+        for (int i : w) {
+            size += i;
+        }
+        rand = new Random();
+        this.w = w;
+    }
+    
+    public int pickIndex() {
+        int random = rand.nextInt(size) + 1;
+        int cur = 0;
+        for (int i = 0; i < w.length; i++) {
+            cur += w[i];
+            if (cur >= random) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
