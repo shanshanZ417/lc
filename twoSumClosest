@@ -1,0 +1,25 @@
+// https://www.jiuzhang.com/solutions/two-sum-closest-to-target/
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(twoSumClosets(new int[]{-1, 2, 1, -4}, 4));
+    }
+    public static int twoSumClosest(int[] nums, int target) {
+        int diff = Integer.MAX_VALUE;
+        Arrays.sort(nums);
+        int len = nums.length;
+        int s = 0;
+        int e = len - 1;
+        while (s < e) {
+            int sum = nums[s] + nums[e];
+            diff = Math.min(Math.abs(sum - target), diff);
+            if (sum == target) {
+                return 0;
+            } else if (sum > target) {
+                e--;
+            } else {
+                s++;
+            }
+        }
+        return diff;
+    }
+}
