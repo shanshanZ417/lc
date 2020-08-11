@@ -1,0 +1,25 @@
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(triangleCount(new int[]{3, 4, 6, 7}));
+
+    }
+    public static int triangleCount(int[] nums) {
+        if (nums == null || nums.length < 3) {
+            return 0;
+        }
+        int res = 0;
+        int len = nums.length;
+        Arrays.sort(nums);
+        // 指针运用很巧妙
+        for (int i = 2; i < len; i++) {
+            int k = 0;
+            for (int j = i - 1; k < j; j--) {
+                while (k < j && nums[k] + nums[j] <= nums[i]) {
+                    k++;
+                }
+                res += j - k;
+            }
+        }
+        return res;
+    }
+}
