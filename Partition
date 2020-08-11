@@ -58,3 +58,6 @@ public class Main {
         nums[e] = temp;
     }
 }
+
+// tips: #1 while里面能不套while就不套 #2 while loop里面的条件想清楚，几个corner case。null， size 1， size 2， 一直加，一直减
+// 正常的。都考虑能不能handle
