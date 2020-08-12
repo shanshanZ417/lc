@@ -86,7 +86,7 @@ class Solution {
     }
 }
 
-// 最终版本（以后就用这个哈）
+// 最终版本
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         return helper(0, nums.length - 1, nums,  nums.length - k);
@@ -126,7 +126,7 @@ class Solution {
     }
 }
 
-// quick select partition 版本
+// quick select partition 版本（以后就用这个哈） https://www.jiuzhang.com/problem/kth-largest-element/
 class Solution {
     public int findKthLargest(int[] nums, int k) {
         return helper(0, nums.length - 1, nums.length - k, nums);
