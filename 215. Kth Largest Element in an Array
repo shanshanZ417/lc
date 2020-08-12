@@ -162,3 +162,5 @@ class Solution {
         return nums[k];
     }
 }
+
+// quick sort https://www.jiuzhang.com/problem/quick-sort/
