@@ -10,6 +10,8 @@
 
 */
 
+
+// k个color的 https://www.jiuzhang.com/solutions/sort-colors-ii/
 class Solution {
     public void sortColors(int[] nums) {
         int i = 0;
@@ -34,3 +36,5 @@ class Solution {
         nums[e] = tmp;
     }
 }
+
+
