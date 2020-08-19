@@ -91,8 +91,8 @@ public class Codec {
 
 // sol 3: leetcode存储法 bfs with queue
 public class Codec {
-    private final String delimiter = " ";
-    private final String nullStatus = "n";
+    private static final String DELIMETER = " ";
+    private static final String NULLSTATUS = "null";
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
         if (root == null) return "";
@@ -101,13 +101,14 @@ public class Codec {
         StringBuilder sb = new StringBuilder();
         while (!queue.isEmpty()) {
             TreeNode cur = queue.pollFirst();
-            if (cur == null) {
-                sb.append(delimiter).append(nullStatus);
-                continue;
+            if (cur != null) {
+                sb.append(cur.val);
+                queue.offerLast(cur.left);
+                queue.offerLast(cur.right);
+            } else {
+                sb.append(NULLSTATUS);
             }
-            sb.append(delimiter).append(cur.val);
-            queue.offerLast(cur.left);
-            queue.offerLast(cur.right);
+            sb.append(DELIMETER);
         }
         return sb.toString().trim();
     }
@@ -117,16 +118,16 @@ public class Codec {
         if (data.equals("")) {
             return null;
         }
-        String[] vals = data.split(delimiter);
+        String[] vals = data.split(DELIMETER);
         Deque<TreeNode> queue = new LinkedList<>();
         TreeNode root = new TreeNode(Integer.valueOf(vals[0]));
         queue.offerLast(root);
         int index = 1;
         while (!queue.isEmpty() && index < vals.length) {
             TreeNode cur = queue.pollFirst();
-            TreeNode leftNode = vals[index].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(vals[index]));
+            TreeNode leftNode = vals[index].equals(NULLSTATUS) ? null : new TreeNode(Integer.valueOf(vals[index]));
             index++;
-            TreeNode rightNode = vals[index].equals(nullStatus) ? null : new TreeNode(Integer.valueOf(vals[index]));
+            TreeNode rightNode = vals[index].equals(NULLSTATUS) ? null : new TreeNode(Integer.valueOf(vals[index]));
             index++;
             cur.left = leftNode;
             cur.right = rightNode;
