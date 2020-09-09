@@ -1,3 +1,4 @@
+//  从右边扫 to avoid overwriting numbers 
 class Solution {
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         int index = m + n - 1;
