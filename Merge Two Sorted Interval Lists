@@ -1,0 +1,52 @@
+// https://www.jiuzhang.com/solutions/merge-two-sorted-interval-lists/
+import java.util.stream.*;
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+        int[][] interval1 = new int[][]{{1, 2}, {3, 4}};
+        int[][] interval2 = new int[][]{{2, 3}, {4, 6}};
+        for (int[] res : helper(interval1, interval2)) {
+            System.out.println(Arrays.toString(res));
+        }
+        // System.out.println(helper(interval1, interval2).toString());
+    }
+    private static int[][] helper(int[][] interval1, int[][] interval2) {
+        int i = 0;
+        int j = 0;
+        int[] prev = null;
+        int[] cur = null;
+        List<int[]> res = new ArrayList<>();
+        while (i < interval1.length && j < interval2.length) {
+            if (interval1[i][0] <= interval2[j][0]) {
+                cur = interval1[i];
+                i++;
+            } else {
+                cur = interval2[j];
+                j++;
+            }
+            prev = merge(prev, cur, res);
+        }
+        while (i < interval1.length) {
+            prev = merge(prev, interval1[i++], res);
+        }
+        while (j < interval2.length) {
+            prev = merge(prev, interval2[j++], res);
+        }
+         if (prev != null) {
+        	res.add(prev);
+        }
+        return res.stream().toArray(int[][]::new);
+    }
+    private static int[] merge(int[] prev, int[] cur, List<int[]> res) {
+        if (prev == null) {
+            return cur;
+        }
+        if (cur[0] <= prev[1]) {
+            prev[1] = Math.max(prev[1], cur[1]);
+            return prev;
+        } else {
+            res.add(prev);
+            return cur;
+        }
+    }
+}
