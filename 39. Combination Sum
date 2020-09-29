@@ -12,6 +12,7 @@ class Solution {
             return;
         }
         for (int i = index; i < candidates.length; i++) {
+            // 还是判断一下好，万一candidate还挺大的，而且都比target大，那其实加了挺多层的。
             if (candidates[i] <= target) {
                 cur.add(candidates[i]);
                 helper(candidates, i, target - candidates[i], cur, res);
