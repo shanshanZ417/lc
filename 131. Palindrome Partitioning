@@ -70,3 +70,49 @@ class Solution {
         return isPalindrom;
     }
 }
+
+// 我真牛逼再写一遍还是最优解，因为下面思路很对。
+// all posibility -> visited -> dfs with memo 
+// how to record visit -> go through -> boolean[i][j] = boolean[i + 1][j - 1] && (str[i] == str[j])
+// how to dfs -> 2^n
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<>();
+        boolean[][] isPalindrome = findPalindrom(s);
+        helper(s, 0, isPalindrome, new ArrayList<>(), res);
+        return res;
+    }
+    private void helper(String s, int index, boolean[][] isPalindrome, List<String> cur, List<List<String>> res) {
+        if (index == s.length()) {
+            res.add(new ArrayList<>(cur));
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            if (isPalindrome[index][i]) {
+                cur.add(s.substring(index, i + 1));
+                helper(s, i + 1, isPalindrome, cur, res);
+                cur.remove(cur.size() - 1);
+            }
+        }
+    }
+    private boolean[][] findPalindrom(String s) {
+        int len = s.length();
+        boolean[][] isPalindrome = new boolean[len][len];
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j <= i; j++) {
+                if (i == j) {
+                    isPalindrome[i][j] = true;
+                } else if (j + 1 == i) {
+                    if (s.charAt(i) == s.charAt(j)) {
+                        isPalindrome[j][i] = true;
+                    }
+                } else {
+                    if (s.charAt(i) == s.charAt(j) && isPalindrome[j + 1][i - 1]) {
+                        isPalindrome[j][i] = true;
+                    }
+                }
+            }
+        }
+        return isPalindrome;
+    }
+}
